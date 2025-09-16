@@ -1,0 +1,53 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  build:
+    name: Build and test (matrix)
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        asan: [false, true]
+    env:
+      CC: gcc
+      CXX: g++
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v5
+
+      - name: Install build dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y build-essential cmake ninja-build git
+
+      - name: Configure
+        run: |
+          mkdir -p build
+          if [ "${{ matrix.asan }}" = "true" ]; then
+            echo "Configuring ASan build"
+            cmake -S . -B build \
+              -DCMAKE_BUILD_TYPE=Debug \
+              -DCMAKE_C_FLAGS="-fsanitize=address -fno-omit-frame-pointer -g" \
+              -DCMAKE_EXE_LINKER_FLAGS="-fsanitize=address" \
+              -DCMAKE_SHARED_LINKER_FLAGS="-fsanitize=address"
+          else
+            echo "Configuring normal build"
+            cmake -S . -B build -DCMAKE_BUILD_TYPE=RelWithDebInfo
+          fi
+
+      - name: Build
+        run: cmake --build build -- -j $(nproc)
+
+      - name: Run tests
+        env:
+          # Helpful ASan options when matrix.asan is true
+          ASAN_OPTIONS: "detect_leaks=1:abort_on_error=1"
+        run: |
+          cd build
+          ctest --output-on-failure -j 2
