@@ -12,7 +12,7 @@ if (-not (Get-Command clang-tidy -ErrorAction SilentlyContinue)) {
     Abort "clang-tidy not found in PATH"
 }
 
-$compilerArgsBase = @('--', '-I' + (Join-Path (Get-Location) 'include'), '-std=c11')
+$compilerArgsBase = @('--', '-I' + (Join-Path (Get-Location) 'include'), '-std=c17')
 
 $files = Get-ChildItem -Path src, include -Recurse -File -Include *.c, *.h -ErrorAction SilentlyContinue | ForEach-Object { $_.FullName }
 if ($files.Count -eq 0) {
