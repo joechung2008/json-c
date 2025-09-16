@@ -2,24 +2,15 @@
   "version": "2.0.0",
   "tasks": [
     {
-      "label": "CMake: Configure",
-      "type": "shell",
-      "command": "cmake",
-      "args": ["-S", ".", "-B", "build", "-DCMAKE_EXPORT_COMPILE_COMMANDS=ON"],
-      "group": {
-        "kind": "build",
-        "isDefault": false
-      },
-      "presentation": {
-        "reveal": "always"
-      },
-      "problemMatcher": []
-    },
-    {
       "label": "CMake: Build",
       "type": "shell",
-      "command": "cmake",
-      "args": ["--build", "build", "--config", "Debug"],
+      "linux": {
+        "command": "bin/build.sh"
+      },
+      "windows": {
+        "command": "bin/build.ps1",
+        "args": ["--Configuration", "Debug"]
+      },
       "group": {
         "kind": "build",
         "isDefault": true
@@ -32,8 +23,13 @@
     {
       "label": "CMake: Build (Release)",
       "type": "shell",
-      "command": "cmake",
-      "args": ["--build", "build", "--config", "Release"],
+      "linux": {
+        "command": "bin/build.sh"
+      },
+      "windows": {
+        "command": "bin/build.ps1",
+        "args": ["--Configuration", "Release"]
+      },
       "presentation": {
         "reveal": "always"
       },
@@ -52,8 +48,12 @@
     {
       "label": "CMake: Run Tests",
       "type": "shell",
-      "command": "ctest",
-      "args": ["--test-dir", "build", "--output-on-failure"],
+      "linux": {
+        "command": "bin/run-tests.sh"
+      },
+      "windows": {
+        "command": "bin/run-tests.ps1"
+      },
       "presentation": {
         "reveal": "always"
       },
