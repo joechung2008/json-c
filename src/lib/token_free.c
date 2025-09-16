@@ -30,10 +30,6 @@ void token_free(void *tok)
     }
     case TOKEN_TRUE:
     case TOKEN_FALSE:
-    {
-        free(tok);
-        break;
-    }
     case TOKEN_NULL:
     {
         free(tok);
