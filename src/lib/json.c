@@ -1,3 +1,4 @@
+#include <stdbool.h>
 #include <stdlib.h>
 #include <string.h>
 #include <json_c/json.h>
@@ -79,18 +80,17 @@ const char *json_text(const json_value_t *v)
     return v ? v->text : NULL;
 }
 
-int json_value_type(const json_value_t *v)
+json_type_t json_value_type(const json_value_t *v)
 {
     if (!v || !v->token)
-        return -1;
+        return JSON_TYPE_ERROR;
     /* token structs have 'type' field as second int (after skip) */
-    int type = TOKEN_TYPE(v->token);
+    int type = token_get_type((void *)v->token);
     switch (type)
     {
     case TOKEN_NULL:
         return JSON_NULL;
     case TOKEN_TRUE:
-        return JSON_TRUE;
     case TOKEN_FALSE:
         return JSON_FALSE;
     case TOKEN_NUMBER:
@@ -104,59 +104,59 @@ int json_value_type(const json_value_t *v)
     case TOKEN_PAIR:
         return JSON_PAIR;
     default:
-        return -1;
+        return JSON_TYPE_ERROR;
     }
 }
 
-int json_value_get_number(const json_value_t *v, double *out)
+bool json_value_get_number(const json_value_t *v, double *out)
 {
     if (!v || !v->token)
-        return 0;
-    int type = TOKEN_TYPE(v->token);
+        return false;
+    int type = token_get_type((void *)v->token);
     if (type != TOKEN_NUMBER)
-        return 0;
+        return false;
     NumberToken *n = (NumberToken *)v->token;
     if (out)
         *out = n->value;
-    return 1;
+    return true;
 }
 
 const char *json_value_get_string(const json_value_t *v)
 {
     if (!v || !v->token)
         return NULL;
-    int type = TOKEN_TYPE(v->token);
+    int type = token_get_type((void *)v->token);
     if (type != TOKEN_STRING)
         return NULL;
     StringToken *s = (StringToken *)v->token;
     return s->value;
 }
 
-int json_value_get_bool(const json_value_t *v, int *out)
+bool json_value_get_bool(const json_value_t *v, bool *out)
 {
     if (!v || !v->token)
-        return 0;
-    int type = TOKEN_TYPE(v->token);
+        return false;
+    int type = token_get_type((void *)v->token);
     if (type == TOKEN_TRUE)
     {
         if (out)
-            *out = 1;
-        return 1;
+            *out = true;
+        return true;
     }
     if (type == TOKEN_FALSE)
     {
         if (out)
-            *out = 0;
-        return 1;
+            *out = false;
+        return true;
     }
-    return 0;
+    return false;
 }
 
 size_t json_array_length(const json_value_t *v)
 {
     if (!v || !v->token)
         return 0;
-    int type = TOKEN_TYPE(v->token);
+    int type = token_get_type((void *)v->token);
     if (type != TOKEN_ARRAY)
         return 0;
     ArrayToken *a = (ArrayToken *)v->token;
@@ -169,7 +169,7 @@ json_value_t *json_array_get(const json_value_t *v, size_t idx)
 {
     if (!v || !v->token)
         return NULL;
-    int type = *((int *)(((char *)v->token) + sizeof(int)));
+    int type = token_get_type((void *)v->token);
     if (type != TOKEN_ARRAY)
         return NULL;
     ArrayToken *a = (ArrayToken *)v->token;
@@ -194,7 +194,7 @@ size_t json_object_size(const json_value_t *v)
 {
     if (!v || !v->token)
         return 0;
-    int type = TOKEN_TYPE(v->token);
+    int type = token_get_type((void *)v->token);
     if (type != TOKEN_OBJECT)
         return 0;
     ObjectToken *o = (ObjectToken *)v->token;
@@ -207,7 +207,7 @@ const char *json_object_key(const json_value_t *v, size_t idx)
 {
     if (!v || !v->token)
         return NULL;
-    int type = TOKEN_TYPE(v->token);
+    int type = token_get_type((void *)v->token);
     if (type != TOKEN_OBJECT)
         return NULL;
     ObjectToken *o = (ObjectToken *)v->token;
@@ -223,7 +223,7 @@ json_value_t *json_object_value(const json_value_t *v, size_t idx)
 {
     if (!v || !v->token)
         return NULL;
-    int type = TOKEN_TYPE(v->token);
+    int type = token_get_type((void *)v->token);
     if (type != TOKEN_OBJECT)
         return NULL;
     ObjectToken *o = (ObjectToken *)v->token;

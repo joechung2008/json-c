@@ -92,13 +92,13 @@ void test_parse_array_mixed_types(void **state)
     json_value_free_wrapper(e1);
 
     json_value_t *e2 = json_array_get(v, 2);
-    int           b;
+    bool          b;
     assert_true(json_value_get_bool(e2, &b));
-    assert_int_equal(b, 1);
+    assert_true(b);
     json_value_free_wrapper(e2);
 
     json_value_t *e3 = json_array_get(v, 3);
-    int           dummy;
+    bool          dummy;
     assert_false(json_value_get_bool(e3, &dummy)); /* null */
     json_value_free_wrapper(e3);
 

@@ -4,4 +4,4 @@
 
 #include "../types.h"
 
-PairToken *json_parse_pair(char *);
+PairToken *json_parse_pair(const char *s);

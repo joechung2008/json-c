@@ -1,6 +1,7 @@
 # PowerShell build script for Windows
 param(
-    [string]$Configuration = 'Debug'
+    [string]$Configuration = 'Debug',
+    [switch]$BuildTests
 )
 
 $PSScriptRoot = Split-Path -Parent $MyInvocation.MyCommand.Definition
@@ -42,6 +43,12 @@ else {
 }
 
 ## Configure and build with the forced generator
-cmake -S $RootDir -B $BuildDir -G $Generator -A $Arch -DCMAKE_BUILD_TYPE=$Configuration
+# Note: Visual Studio generators are multi-config. Do not pass
+# -DCMAKE_BUILD_TYPE at configure time because it is ignored and
+# causes warnings like "Ignoring extra path from command line: 'Debug'".
+# The configuration (Debug/Release) is selected at build time with --config.
+$cmakeArgs = @('-S', $RootDir, '-B', $BuildDir, '-G', $Generator, '-A', $Arch, '-Wno-dev')
+if ($BuildTests) { $cmakeArgs += '-DJSON_C_BUILD_TESTS=ON' }
+cmake @cmakeArgs
 cmake --build $BuildDir --config $Configuration --parallel
 Write-Host "Build complete. Artifacts in: $BuildDir"

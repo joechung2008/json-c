@@ -9,7 +9,7 @@
 
 // Token header contract: every token begins with two ints (skip, type).
 // Use TOKEN_SKIP(t) and TOKEN_TYPE(t) from src/lib/token_helpers.h to access these fields.
-PairToken *json_parse_pair(char *s)
+PairToken *json_parse_pair(const char *s)
 {
     enum
     {
@@ -79,7 +79,7 @@ PairToken *json_parse_pair(char *s)
             value = token_parse_value(s + pos, " \n\r\t},"); // [ \n\r\t\},]
             if (value != NULL)
             {
-                pos += TOKEN_SKIP(value); // token header helper
+                pos += token_get_skip((void *)value); // token header helper
                 mode = End;
             }
             else

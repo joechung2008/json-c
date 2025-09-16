@@ -69,9 +69,9 @@ void test_parse_pair_key_and_value_bool(void **state)
 
     json_value_t *val = json_object_value(v, 0);
     assert_non_null(val);
-    int b = -1;
+    bool b = false;
     assert_true(json_value_get_bool(val, &b));
-    assert_int_equal(b, 1);
+    assert_true(b);
     json_value_free_wrapper(val);
 
     json_free(v);

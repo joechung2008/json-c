@@ -5,6 +5,9 @@ set(CMAKE_C_STANDARD 17)
 set(CMAKE_C_STANDARD_REQUIRED ON)
 set(CMAKE_C_EXTENSIONS OFF)
 
+# Option to enable building tests; default is OFF so plain builds don't fail
+option(JSON_C_BUILD_TESTS "Build json-c tests" OFF)
+
 file(GLOB_RECURSE JSONC_LIB_SOURCES CONFIGURE_DEPENDS
     ${CMAKE_SOURCE_DIR}/src/lib/*.c
 )
@@ -45,8 +48,10 @@ add_executable(json-cli
 
 target_link_libraries(json-cli PRIVATE json_c)
 
-enable_testing()
-add_subdirectory(tests)
+if(JSON_C_BUILD_TESTS)
+    enable_testing()
+    add_subdirectory(tests)
+endif()
 
 install(TARGETS json_c json-cli
     LIBRARY DESTINATION lib

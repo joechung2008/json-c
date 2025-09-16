@@ -1,3 +1,4 @@
+#include "../json_internal.h"
 #include "shared.h"
 
 // used by number.c and string.c
@@ -12,19 +13,29 @@ char *strncat_dynamic(char *dst, const char *src, size_t n)
         dst = (char *)calloc(src_len + 1, sizeof(char));
         if (!dst)
             return NULL;
-        memcpy(dst, src, src_len);
+        if (json_memcpy(dst, src_len + 1, src, src_len) != 0)
+        {
+            free(dst);
+            return NULL;
+        }
         dst[src_len] = '\0';
         return dst;
     }
 
     size_t dst_len = strlen(dst);
-    char  *newp    = (char *)realloc(dst, dst_len + src_len + 1);
-    if (!newp)
+    /* Use a temporary pointer for realloc to avoid losing the original
+     * buffer if allocation fails. Do not free the original here; leave
+     * error handling to the caller to be consistent with other paths.
+     */
+    char *tmp = (char *)realloc(dst, dst_len + src_len + 1);
+    if (!tmp)
     {
-        free(dst);
         return NULL;
     }
-    memcpy(newp + dst_len, src, src_len);
-    newp[dst_len + src_len] = '\0';
-    return newp;
+    if (json_memcpy(tmp + dst_len, src_len + 1, src, src_len) != 0)
+    {
+        return NULL;
+    }
+    tmp[dst_len + src_len] = '\0';
+    return tmp;
 }

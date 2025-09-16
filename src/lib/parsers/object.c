@@ -6,7 +6,7 @@
 #include "pair.h"
 #include "../token_free.h"
 
-ObjectToken *json_parse_object(char *s)
+ObjectToken *json_parse_object(const char *s)
 {
     enum
     {
@@ -128,13 +128,25 @@ static PairTokens *append_pair(PairTokens *tokensp, PairToken *tokenp)
 {
     if (tokensp == NULL)
     {
-        tokensp        = (PairTokens *)malloc(sizeof(PairTokens));
+        tokensp = (PairTokens *)malloc(sizeof(PairTokens));
+        if (!tokensp)
+            return NULL;
         tokensp->size  = 0;
         tokensp->pairs = (PairToken **)malloc(sizeof(PairToken *));
+        if (!tokensp->pairs)
+        {
+            free(tokensp);
+            return NULL;
+        }
     }
     else
     {
-        tokensp->pairs = (PairToken **)realloc(tokensp->pairs, (1 + tokensp->size) * sizeof(PairToken *));
+        PairToken **tmp = (PairToken **)realloc(tokensp->pairs, (1 + tokensp->size) * sizeof(PairToken *));
+        if (!tmp)
+        {
+            return NULL;
+        }
+        tokensp->pairs = tmp;
     }
 
     tokensp->pairs[tokensp->size++] = tokenp;

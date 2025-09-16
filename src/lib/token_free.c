@@ -1,3 +1,4 @@
+#include <stdint.h>
 #include <stdlib.h>
 
 #include "types.h"
@@ -10,7 +11,7 @@ void token_free(void *tok)
         return;
 
     /* Centralized helper for token header access */
-    int type = TOKEN_TYPE(tok);
+    int type = token_get_type((void *)tok);
 
     switch (type)
     {
@@ -53,7 +54,7 @@ void token_free(void *tok)
         ArrayToken *a = (ArrayToken *)tok;
         if (a->elements)
         {
-            for (int i = 0; i < a->elements->size; ++i)
+            for (int32_t i = 0; i < a->elements->size; ++i)
             {
                 token_free(a->elements->tokens[i]);
             }
@@ -68,7 +69,7 @@ void token_free(void *tok)
         ObjectToken *o = (ObjectToken *)tok;
         if (o->members)
         {
-            for (int i = 0; i < o->members->size; ++i)
+            for (int32_t i = 0; i < o->members->size; ++i)
             {
                 token_free(o->members->pairs[i]);
             }
@@ -88,7 +89,7 @@ void free_tokens(struct Tokens *t)
 {
     if (!t)
         return;
-    for (int i = 0; i < t->size; ++i)
+    for (int32_t i = 0; i < t->size; ++i)
     {
         token_free(t->tokens[i]);
     }
@@ -100,7 +101,7 @@ void free_pairtokens(struct PairTokens *p)
 {
     if (!p)
         return;
-    for (int i = 0; i < p->size; ++i)
+    for (int32_t i = 0; i < p->size; ++i)
     {
         token_free(p->pairs[i]);
     }

@@ -76,7 +76,7 @@ void test_parse_array_and_values(void **state)
     (void)state;
     json_value_t *v = json_parse("[1,2,3]");
     assert_non_null(v);
-    int t = json_value_type(v);
+    json_type_t t = json_value_type(v);
     assert_int_equal(t, JSON_ARRAY);
     size_t n = json_array_length(v);
     assert_int_equal((int)n, 3);

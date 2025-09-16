@@ -57,14 +57,14 @@ int main(int argc, char **argv)
     char  *input = read_stdin_all(&len);
     if (!input)
     {
-        fprintf(stderr, "failed to read stdin\n");
+        fputs("failed to read stdin\n", stderr);
         return 2;
     }
 
     /* If no data was provided, treat as error */
     if (len == 0)
     {
-        fprintf(stderr, "no input provided\n");
+        fputs("no input provided\n", stderr);
         free(input);
         return 3;
     }
@@ -72,7 +72,7 @@ int main(int argc, char **argv)
     json_value_t *v = json_parse(input);
     if (!v)
     {
-        fprintf(stderr, "parse failed: %s\n", input);
+        fputs("parse failed\n", stderr);
         free(input);
         return 1;
     }
@@ -81,9 +81,9 @@ int main(int argc, char **argv)
      * text when token parsing failed; in that case treat it as a parse
      * failure for CLI consumers.
      */
-    if (json_value_type(v) == -1)
+    if (json_value_type(v) == JSON_TYPE_ERROR)
     {
-        fprintf(stderr, "parse failed: %s\n", input);
+        fputs("parse failed\n", stderr);
         json_free(v);
         free(input);
         return 1;
@@ -93,7 +93,7 @@ int main(int argc, char **argv)
     if (out)
         fputs(out, stdout);
     else
-        fprintf(stderr, "json_text returned NULL\n");
+        fputs("json_text returned NULL\n", stderr);
 
     json_free(v);
     free(input);
