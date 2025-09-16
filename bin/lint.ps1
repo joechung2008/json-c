@@ -1,36 +1,43 @@
 <#
-bin/lint.ps1 — run clang-tidy over C sources and headers using compile_commands.json
-Usage: bin\lint.ps1 [-BuildDir build] [-Jobs 4] [-- <clang-tidy args>]
+bin/lint.ps1 — run clang-tidy over C sources and headers
+Usage: bin\lint.ps1
 #>
 
-param(
-    [string]$BuildDir = "build",
-    [int]$Jobs = 0,
-    [Parameter(ValueFromRemainingArguments = $true)]
-    [string[]]$ExtraArgs
-)
-
-function Abort($msg) { Write-Error $msg; exit 2 }
+function Abort($msg) {
+    Write-Error $msg;
+    exit 2
+}
 
 if (-not (Get-Command clang-tidy -ErrorAction SilentlyContinue)) {
     Abort "clang-tidy not found in PATH"
 }
 
-if (-not (Test-Path (Join-Path $BuildDir 'compile_commands.json'))) {
-    Abort "compile_commands.json not found in $BuildDir. Run: cmake -S . -B $BuildDir -DCMAKE_EXPORT_COMPILE_COMMANDS=ON"
+$compilerArgsBase = @('--', '-I' + (Join-Path (Get-Location) 'include'), '-std=c11')
+
+$files = Get-ChildItem -Path src, include -Recurse -File -Include *.c, *.h -ErrorAction SilentlyContinue | ForEach-Object { $_.FullName }
+if ($files.Count -eq 0) {
+    Write-Output "No source files found under src/ or include/";
+    exit 0
 }
 
-$files = Get-ChildItem -Path src, include -Recurse -File -Include *.c,*.h -ErrorAction SilentlyContinue | ForEach-Object { $_.FullName }
-if ($files.Count -eq 0) { Write-Output "No source files found under src/ or include/"; exit 0 }
-
-if ($Jobs -gt 0 -and (Get-Command run-clang-tidy.py -ErrorAction SilentlyContinue)) {
-    # run-clang-tidy.py supports -j on Windows under Python.
-    & run-clang-tidy.py -p $BuildDir -j $Jobs $files @ExtraArgs
-    exit $LASTEXITCODE
-}
-
-# Fallback: run clang-tidy sequentially
 foreach ($f in $files) {
-    & clang-tidy -p $BuildDir $f @ExtraArgs
-    if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+    # Use a minimal, hard-coded clang-tidy argument set
+    $clangArgs = @('-header-filter=.*')
+
+    # Build argument array and capture output so we can filter noisy advice lines
+    $args = @($f) + $clangArgs + $compilerArgsBase
+    $output = & clang-tidy @args 2>&1
+    $rc = $LASTEXITCODE
+
+    # Filter out clang-tidy advice about header/system-headers and the final "N warnings generated." lines
+    $filtered = $output | Where-Object {
+        ($_ -notmatch "Use -header-filter") -and
+        ($_ -notmatch "Use -system-headers") -and
+        ($_ -notmatch "^\s*\d+ warnings generated\.") -and
+        ($_ -notmatch "^\s*Suppressed\s+\d+\s+warnings")
+    }
+
+    $filtered | ForEach-Object { Write-Output $_ }
+
+    if ($rc -ne 0) { exit $rc }
 }

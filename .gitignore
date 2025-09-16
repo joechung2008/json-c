@@ -1,6 +1,6 @@
 # Build artifacts and output directories
 /build/
-/bin/
+/build-vs/
 /out/
 /dist/
 

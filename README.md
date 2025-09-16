@@ -69,17 +69,26 @@ We recommend using `clang-tidy` for static analysis and style checks. `clang-tid
 Quick start:
 
 ```bash
-# Generate compilation database
+# Generate compilation database (required for bin/lint.sh)
 cmake -S . -B build -DCMAKE_EXPORT_COMPILE_COMMANDS=ON
-
-# Run clang-tidy across C sources (uses .clang-tidy at repo root if present)
-clang-tidy -p build $(find src -name '*.c')
-
-# Or use the bundled helper (parallel when possible)
-bin/lint.sh -p build -j 4
 ```
 
-If you want to analyze headers as well, prefer `run-clang-tidy.py` (bundled with LLVM) or use `bin/lint.sh` which will attempt to map headers to translation units. See `TESTS.md` for more information on interpreting analyzer output.
+```bash
+# Run clang-tidy across C sources (uses .clang-tidy at repo root if present)
+clang-tidy -p build $(find src -name '*.c')
+```
+
+```bash
+# POSIX / bash (requires build/compile_commands.json)
+./bin/lint.sh
+```
+
+```powershell
+# PowerShell (Windows)
+./bin/lint.ps1
+```
+
+See `TESTS.md` for more information on interpreting analyzer output.
 
 More information:
 
