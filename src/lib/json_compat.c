@@ -71,6 +71,15 @@ char *json_strdup(const char *s)
 #endif
 }
 
+/* Portable json_strnlen implementation. Use memchr to avoid relying on
+ * a possibly missing prototype for strnlen on some platforms/feature tests.
+ */
+size_t json_strnlen(const char *s, size_t maxlen)
+{
+    const void *p = memchr(s, '\0', maxlen);
+    return p ? (size_t)((const char *)p - s) : maxlen;
+}
+
 /* Locale-invariant wrapper around strtod. Prefer locale-specific APIs when
  * available (strtod_l/_strtod_l). Otherwise temporarily switch LC_NUMERIC to
  * the "C" locale, call strtod, and restore the previous locale. Note: changing

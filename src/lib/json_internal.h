@@ -26,6 +26,9 @@ extern "C"
      */
     double json_strtod(const char *nptr, char **endptr);
 
+    /* Portable strnlen replacement exposed to the library. */
+    size_t json_strnlen(const char *s, size_t maxlen);
+
 #ifdef __cplusplus
 }
 #endif

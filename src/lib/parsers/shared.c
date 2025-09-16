@@ -7,7 +7,7 @@ char *strncat_dynamic(char *dst, const char *src, size_t n)
     if (!src)
         return dst;
 
-    size_t src_len = strnlen(src, n);
+    size_t src_len = json_strnlen(src, n);
     if (dst == NULL)
     {
         dst = (char *)calloc(src_len + 1, sizeof(char));
