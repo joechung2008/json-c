@@ -9,7 +9,11 @@ $BuildDir = Join-Path $RootDir 'build'
 
 if (-not (Test-Path $BuildDir)) {
     Write-Host "Build directory not found; running build first..."
-    & $PSScriptRoot\build.ps1 -Configuration $Configuration
+    & $PSScriptRoot\build.ps1 -Configuration $Configuration -BuildTests
+}
+else {
+    # Ensure tests were configured; run configure with tests enabled to fetch test deps
+    & $PSScriptRoot\build.ps1 -Configuration $Configuration -BuildTests | Out-Null
 }
 
 # Add config-specific output dir(s) to PATH so tests can find json_c.dll
@@ -50,3 +54,5 @@ if (Get-Command ctest -ErrorAction SilentlyContinue) {
         exit 1
     }
 }
+
+# compile_commands.json handling intentionally omitted on Windows

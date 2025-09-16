@@ -1,12 +1,34 @@
 /* Portable duplication helper for internal use */
 #include "json_internal.h"
-#include <stdlib.h>
-#include <string.h>
 #include <errno.h>
 #include <locale.h>
+#include <stdlib.h>
+#include <string.h>
+
 #if defined(__STDC_VERSION__) && (__STDC_VERSION__ >= 202311L)
 /* C23 added strdup but not a locale-specific strtod wrapper; feature-test below */
 #endif
+
+#if defined(_MSC_VER)
+#include <string.h> /* for memcpy_s */
+#endif
+
+/* json_memcpy: checked memcpy wrapper. Returns 0 on success, -1 on error. */
+int json_memcpy(void *restrict dst, size_t dst_size, const void *restrict src, size_t n)
+{
+#if defined(_MSC_VER)
+    if (memcpy_s(dst, dst_size, src, n) != 0)
+        return -1;
+    return 0;
+#else
+    if (dst == NULL || src == NULL)
+        return -1;
+    if (dst_size < n)
+        return -1;
+    memcpy(dst, src, n);
+    return 0;
+#endif
+}
 
 #if defined(__unix__) || defined(__APPLE__)
 #define HAVE_STRTOD_L 1
@@ -40,7 +62,11 @@ char *json_strdup(const char *s)
     char  *p = (char *)malloc(n);
     if (!p)
         return NULL;
-    memcpy(p, s, n);
+    if (json_memcpy(p, n, s, n) != 0)
+    {
+        free(p);
+        return NULL;
+    }
     return p;
 #endif
 }

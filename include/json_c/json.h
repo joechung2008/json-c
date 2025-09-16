@@ -1,7 +1,7 @@
 #ifndef JSON_C_JSON_H
 #define JSON_C_JSON_H
 
-#include <stddef.h> /* for size_t */
+#include "types.h"
 
 #ifdef __cplusplus
 extern "C"
@@ -33,26 +33,28 @@ extern "C"
         JSON_STRING,
         JSON_ARRAY,
         JSON_OBJECT,
-        JSON_PAIR
+        JSON_PAIR,
+        JSON_TYPE_ERROR = 0x7fffffff /* sentinel for errors */
     } json_type_t;
 
-    /* Get the type of the parsed value. Returns one of json_type_t or -1 for error. */
-    int json_value_type(const json_value_t *v);
+    /* Get the type of the parsed value. Returns one of json_type_t; on
+     * error returns JSON_TYPE_ERROR. */
+    json_type_t json_value_type(const json_value_t *v);
 
-    /* Get numeric value. Returns 1 on success and writes the value to out.
-     * Returns 0 if the value is not numeric.
+    /* Get numeric value. Returns true on success and writes the value to out.
+     * Returns false if the value is not numeric.
      */
-    int json_value_get_number(const json_value_t *v, double *out);
+    bool json_value_get_number(const json_value_t *v, double *out);
 
     /* Get string value. Returns pointer to NUL-terminated string owned by the
      * token (valid until the root json_value is freed), or NULL if not a string.
      */
     const char *json_value_get_string(const json_value_t *v);
 
-    /* Boolean getter. Returns 1 on success and writes 0/1 to out; returns 0 if
-     * not a boolean value.
+    /* Boolean getter. Returns true on success and writes false/true to out;
+     * returns false if not a boolean value.
      */
-    int json_value_get_bool(const json_value_t *v, int *out);
+    bool json_value_get_bool(const json_value_t *v, bool *out);
 
     /* Array/object accessors */
     size_t        json_array_length(const json_value_t *v);

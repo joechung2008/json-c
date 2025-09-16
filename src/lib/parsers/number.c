@@ -6,7 +6,7 @@
 #include "shared.h"
 #include "../json_internal.h"
 
-NumberToken *json_parse_number(char *s, char *delimiters)
+NumberToken *json_parse_number(const char *s, const char *delimiters)
 {
     enum
     {

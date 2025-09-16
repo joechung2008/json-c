@@ -5,5 +5,5 @@
 
 #include "../types.h"
 
-Token *token_parse(char *, bool);
-Token *token_parse_value(char *, char *);
+Token *token_parse(const char *s, bool strict);
+Token *token_parse_value(const char *s, const char *delimiters);

@@ -1,8 +1,9 @@
+#include "../json_internal.h"
 #include "string.h"
 #include "shared.h"
 
 // BUG \uxxxx fails when xxxx > 0xFF
-StringToken *json_parse_string(char *s)
+StringToken *json_parse_string(const char *s)
 {
     enum
     {
@@ -170,7 +171,7 @@ fail:
     return NULL;
 }
 
-static long parse_hexadecimal_code(char *s)
+static long parse_hexadecimal_code(const char *s)
 {
     /*
      * Use a writable local buffer for the hex string. Do NOT write into
@@ -178,7 +179,12 @@ static long parse_hexadecimal_code(char *s)
      * hex digits starting at `s`.
      */
     char hex[7] = "0x0000"; /* 6 chars + NUL */
-    memcpy(hex + 2, s, 4);
+    /* Ensure the input has at least 4 characters to copy. */
+    if (strnlen(s, 5) < 4)
+        return -1l;
+    _Static_assert(sizeof(hex) >= 7, "hex buffer too small");
+    if (json_memcpy(hex + 2, sizeof hex - 2, s, 4) != 0)
+        return -1l;
     hex[6] = '\0';
 
     char *endptr;

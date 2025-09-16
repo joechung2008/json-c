@@ -19,16 +19,13 @@ static inline int token_get_skip(void *tok)
 {
     if (!tok)
         return 0;
-    return *((int *)tok);
+    return (int)(*((int32_t *)tok));
 }
 
 static inline int token_get_type(void *tok)
 {
     if (!tok)
         return -1;
-    return *((int *)(((char *)tok) + sizeof(int)));
+    /* token 'type' is located after the first int32_t skip field */
+    return (int)(*((int32_t *)(((char *)tok) + sizeof(int32_t))));
 }
-
-/* Convenience macros for existing call sites */
-#define TOKEN_SKIP(t) token_get_skip((void *)(t))
-#define TOKEN_TYPE(t) token_get_type((void *)(t))

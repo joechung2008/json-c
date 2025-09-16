@@ -9,7 +9,7 @@
 
 // Token header contract: every token begins with two ints (skip, type).
 // Use TOKEN_SKIP(t) and TOKEN_TYPE(t) from src/lib/token_helpers.h to access these fields.
-ArrayToken *json_parse_array(char *s)
+ArrayToken *json_parse_array(const char *s)
 {
     enum
     {
@@ -71,7 +71,7 @@ ArrayToken *json_parse_array(char *s)
                 if (element != NULL)
                 {
                     elements = append_token(elements, (Token *)element);
-                    pos += TOKEN_SKIP(element); // token header helper
+                    pos += token_get_skip((void *)element); // token header helper
                     mode = Comma;
                 }
                 else
@@ -145,13 +145,13 @@ static Tokens *append_token(Tokens *tokensp, Token *tokenp)
     }
     else
     {
-        Token **newp = (Token **)realloc(tokensp->tokens, (1 + tokensp->size) * sizeof(Token *));
-        if (!newp)
+        Token **tmp = (Token **)realloc(tokensp->tokens, (1 + tokensp->size) * sizeof(Token *));
+        if (!tmp)
         {
             /* leave tokensp unchanged; caller should handle cleanup */
             return NULL;
         }
-        tokensp->tokens = newp;
+        tokensp->tokens = tmp;
     }
 
     tokensp->tokens[tokensp->size++] = tokenp;

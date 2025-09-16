@@ -7,7 +7,7 @@
 #include "string.h"
 #include "value.h"
 
-Token *token_parse(char *s, bool strict)
+Token *token_parse(const char *s, bool strict)
 {
     if (strict)
     {
@@ -19,7 +19,7 @@ Token *token_parse(char *s, bool strict)
     }
 }
 
-Token *token_parse_value(char *s, char *delimiters)
+Token *token_parse_value(const char *s, const char *delimiters)
 {
     enum
     {

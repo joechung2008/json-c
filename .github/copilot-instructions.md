@@ -1,5 +1,12 @@
 # Guidelines for AI coding assistants like GitHub Copilot
 
+## Instructions for GPT-5-mini
+
+- **Be concise and direct.** Avoid any preambles, acknowledgments, or conversational pleasantries.
+- **Provide only the answer.** Do not include any explanations unless specifically asked.
+- **Limit responses to the core information** requested by the user.
+- **Never ask follow-up questions** or offer further assistance.
+
 ## Testing
 
 - Do not combine multiple cases into one.
