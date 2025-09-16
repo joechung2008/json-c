@@ -10,6 +10,20 @@ file(GLOB_RECURSE JSONC_LIB_SOURCES CONFIGURE_DEPENDS
 
 add_library(json_c SHARED ${JSONC_LIB_SOURCES})
 
+if (WIN32)
+    # Ensure MSVC creates an import library when building the shared library
+    # even if explicit __declspec(dllexport) annotations are not present.
+    set_target_properties(json_c PROPERTIES WINDOWS_EXPORT_ALL_SYMBOLS ON)
+    # Place runtime (DLL) and archive (import library) in the config-specific
+    # binary directory so downstream projects can find them (e.g. Debug/)
+    # Use generator expressions to avoid doubling the config directory (e.g. Debug/Debug)
+    set_target_properties(json_c PROPERTIES
+        RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/$<CONFIG>
+        ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/$<CONFIG>
+        LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/$<CONFIG>
+    )
+endif()
+
 target_include_directories(json_c
     PUBLIC
         $<BUILD_INTERFACE:${CMAKE_SOURCE_DIR}/include>

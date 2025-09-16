@@ -19,10 +19,13 @@ Configure the build and build the code:
 ./bin/build.sh
 ```
 
-```bash
+```powershell
 # PowerShell (Windows)
 ./bin/build.ps1
+./bin/build.ps1 -Configuration Release
 ```
+
+Note: On Windows `bin/build.ps1` prefers the [Visual Studio 2022 Build Tools](https://visualstudio.microsoft.com/downloads/#build-tools-for-visual-studio-2022) (CMake generator "Visual Studio 17 2022"). The script will try to detect VS2022 via `vswhere` and will warn if it's not found.
 
 Run the CLI (from the project root):
 
@@ -34,6 +37,7 @@ Run the CLI (from the project root):
 ```powershell
 # PowerShell (Windows)
 ./bin/run-cli.ps1
+./bin/run-cli.ps1 -Configuration Release
 ```
 
 Run unit tests (see `TESTS.md` for more details):
@@ -46,6 +50,7 @@ Run unit tests (see `TESTS.md` for more details):
 ```powershell
 # PowerShell (Windows)
 ./bin/run-tests.ps1
+./bin/run-tests.ps1 -Configuration Release
 ```
 
 ## Format
