@@ -1,28 +1,16 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-# bin/lint.sh — run clang-tidy over C sources and headers using compile_commands.json
-# Usage: bin/lint.sh [-p build] [--] [clang-tidy options]
+# Minimal lint helper for clang-tidy. Opinionated and simple.
+# Usage: bin/lint.sh
 
 BUILD_DIR=build
-# Default to serial; caller can request parallelism with -j N
-PARALLEL=1
+JOBS=0
 
-while [[ $# -gt 0 ]]; do
-  case "$1" in
-    -p|--build)
-      BUILD_DIR="$2"; shift 2;;
-    -j)
-      PARALLEL="$2"; shift 2;;
-    --)
-      shift; break;;
-    -h|--help)
-      echo "Usage: $0 [-p build_dir] [-j jobs] [-- extra clang-tidy args]"; exit 0;;
-    *)
-      # pass through unrecognized args to clang-tidy
-      break;;
-  esac
-done
+if [[ $# -ne 0 ]]; then
+  echo "lint.sh takes no arguments. If you want to run clang-tidy manually, call clang-tidy directly." >&2
+  exit 2
+fi
 
 if ! command -v clang-tidy >/dev/null 2>&1; then
   echo "clang-tidy not found in PATH" >&2
@@ -35,34 +23,37 @@ if [[ ! -f "$BUILD_DIR/compile_commands.json" ]]; then
 fi
 
 # Build file list: .c and .h under src/ and include/
-FILES=()
-# collect files from find; skip any empty entries (some find implementations
-# produce a trailing NUL which would add an empty string to the array)
-while IFS= read -r -d $'\0' f; do
-  [[ -n "$f" ]] || continue
-  FILES+=("$f")
-done < <(find src include -type f \( -name '*.c' -o -name '*.h' \) -print0)
-
+mapfile -d $'\0' FILES < <(find src include -type f \( -name '*.c' -o -name '*.h' \) -print0)
 
 if [[ ${#FILES[@]} -eq 0 ]]; then
   echo "No source files found under src/ or include/"; exit 0
 fi
 
-CLANG_TIDY_ARGS=("-p" "${BUILD_DIR}")
-if [[ $PARALLEL -gt 1 ]]; then
-  # run-clang-tidy.py (if available) is better for parallelism
-  if command -v run-clang-tidy.py >/dev/null 2>&1; then
-    run-clang-tidy.py -p "${BUILD_DIR}" -j "$PARALLEL" "${FILES[@]}" "$@"
-    exit $?
-  fi
+# Default header-filter: show all non-system headers (avoid clang-tidy hint)
+DEFAULT_HEADER_FILTER='-header-filter=.*'
+
+# We intentionally don't support parallelism or extra args here. Keep behavior
+# simple and reproducible: run clang-tidy per file with a conservative
+# header-filter so system headers are ignored by default.
+
+# Run clang-tidy serially (simple, predictable). This script intentionally
+# does not accept extra args; to override behavior, invoke clang-tidy yourself.
+CLANG_ARGS=("-p" "$BUILD_DIR" "$DEFAULT_HEADER_FILTER")
+overall_rc=0
+for f in "${FILES[@]}"; do
+  tmpf=$(mktemp)
+  clang-tidy "${CLANG_ARGS[@]}" "$f" &> "$tmpf"
+  rc=$?
+  # Filter noisy summary/hint lines that clang-tidy prints when it suppresses diagnostics.
+  # Use grep -v with a single robust regex to avoid issues with line wrapping and sed dialects.
+  grep -v -E "^[[:space:]]*Suppressed [0-9]+ warnings|header-filter|system-headers|[0-9]+ warnings( and [0-9]+ errors)? generated\.?$" "$tmpf" || true
+  rm -f "$tmpf"
+  if [[ $rc -ne 0 ]]; then overall_rc=$rc; fi
+done
+
+if [[ $overall_rc -ne 0 ]]; then
+  exit $overall_rc
 fi
 
-# xargs approach: will call clang-tidy for each file. This may be slow but is compatible.
-# Only pass -P to xargs when we actually want parallelism (>1). Some xargs
-# implementations treat -P 0 or -P 1 specially; avoid passing -P 0.
-if [[ $PARALLEL -gt 1 ]]; then
-  # place filename before '--' so clang-tidy receives the file as input
-  printf '%s\0' "${FILES[@]}" | xargs -0 -n1 -P ${PARALLEL} -I{} clang-tidy "${CLANG_TIDY_ARGS[@]}" {} -- "$@"
-else
-  printf '%s\0' "${FILES[@]}" | xargs -0 -n1 -I{} clang-tidy "${CLANG_TIDY_ARGS[@]}" {} -- "$@"
-fi
+# Exit with success (clang-tidy results are printed; use exit codes externally if needed)
+exit 0
