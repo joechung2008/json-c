@@ -32,7 +32,7 @@ Token *token_parse_value(char *s, char *delimiters)
         String,
         True,
         End
-    } Mode;
+    };
 
     int    mode   = Scanning;
     int    pos    = 0;

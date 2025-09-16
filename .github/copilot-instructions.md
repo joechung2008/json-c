@@ -16,3 +16,7 @@
 - Use a consistent testing framework and follow best practices for writing tests.
 - Use descriptive names for test cases to clearly indicate their purpose.
 - Write tests for all new features and bug fixes.
+
+## Running and building in this repo
+
+See the project's `README.md` "Build and run" section for the canonical list of `bin/` helper scripts and usage examples (PowerShell and bash). The `bin` scripts handle configuration, platform detection, and DLL path setup on Windows so prefer them over invoking build/test tools directly.

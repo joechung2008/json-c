@@ -1,6 +1,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <json_c/json.h>
+#include "json_internal.h"
 #include "parsers/value.h"
 #include "types/token.h"
 #include "token_free.h"
@@ -22,7 +23,7 @@ json_value_t *json_parse(const char *text)
     json_value_t *v = malloc(sizeof(*v));
     if (!v)
         return NULL;
-    v->text = strdup(text);
+    v->text = json_strdup(text);
     if (!v->text)
     {
         free(v);
@@ -34,7 +35,7 @@ json_value_t *json_parse(const char *text)
      * parsing fails, free the allocated json_value_t and return NULL to
      * signal a parse error and avoid leaking the duplicated input.
      */
-    char *copy = strdup(text);
+    char *copy = json_strdup(text);
     if (!copy)
     {
         /* strdup failed; cleanup and return error */

@@ -1,7 +1,10 @@
+#include <errno.h>
 #include <stdio.h>
+#include <stdlib.h>
 
 #include "number.h"
 #include "shared.h"
+#include "../json_internal.h"
 
 NumberToken *json_parse_number(char *s, char *delimiters)
 {
@@ -174,9 +177,23 @@ NumberToken *json_parse_number(char *s, char *delimiters)
     }
 
     double number;
-    /* sscanf returns the number of items successfully parsed; require 1 */
-    if (!value || sscanf(value, "%lf", &number) != 1)
+    /* Use strtod with endptr and errno for robust, portable parsing. */
+    if (!value)
         goto fail;
+    errno        = 0;
+    char *endptr = NULL;
+    /* Use locale-invariant parser that always expects '.' as decimal sep. */
+    number = json_strtod(value, &endptr);
+    if (endptr == value)
+        goto fail; /* no conversion performed */
+    if (errno == ERANGE)
+        goto fail; /* out of range */
+    /* If there are trailing characters, they must be delimiters. */
+    if (endptr && *endptr != '\0')
+    {
+        if (delimiters == NULL || strchr(delimiters, *endptr) == NULL)
+            goto fail;
+    }
 
     NumberToken *numbertokenp = (NumberToken *)malloc(sizeof(NumberToken));
     if (!numbertokenp)

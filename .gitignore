@@ -37,7 +37,9 @@ config.log
 config.status
 
 # IDE / editor directories and files
-.vscode/
+.vscode/*
+!.vscode/extensions.json
+!.vscode/tasks.json
 .idea/
 *.sublime-workspace
 *.sublime-project
