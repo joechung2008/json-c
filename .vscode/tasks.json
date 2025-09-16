@@ -5,7 +5,8 @@
       "label": "CMake: Build",
       "type": "shell",
       "linux": {
-        "command": "bin/build.sh"
+        "command": "bin/build.sh",
+        "args": ["-t", "Debug"]
       },
       "windows": {
         "command": "bin/build.ps1",
@@ -24,7 +25,8 @@
       "label": "CMake: Build (Release)",
       "type": "shell",
       "linux": {
-        "command": "bin/build.sh"
+        "command": "bin/build.sh",
+        "args": ["-t", "Release"]
       },
       "windows": {
         "command": "bin/build.ps1",
