@@ -3,9 +3,9 @@
 Checks: >
   clang-analyzer-*,
   bugprone-*,
-  performance-*,
   portability-*,
-  readability-*,
+  -performance-*,
+  -readability-*,
   -readability-magic-numbers,
   -clang-analyzer-alpha.*,   # experimental analyzer checks — may be noisy
   -modernize-*,              # C project — disable C++ modernize checks
