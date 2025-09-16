@@ -10,7 +10,15 @@
 
 #if defined(__unix__) || defined(__APPLE__)
 #define HAVE_STRTOD_L 1
+/* Some platforms provide <xlocale.h> (older glibc); prefer including it
+ * only when the compiler's __has_include reports it exists. On other
+ * systems (including modern glibc), <locale.h> exposes newlocale/strtod_l
+ * and we don't need <xlocale.h>. */
+#if defined(__has_include)
+#if __has_include(<xlocale.h>)
 #include <xlocale.h>
+#endif
+#endif
 #endif
 
 #if defined(_MSC_VER)
@@ -46,8 +54,13 @@ char *json_strdup(const char *s)
 double json_strtod(const char *nptr, char **endptr)
 {
 #if defined(HAVE_STRTOD_L) && !defined(_MSC_VER)
-    /* POSIX-ish platforms: use strtod_l with newlocale/uselocale if available */
-#if defined(__GLIBC__) || defined(__APPLE__)
+    /* POSIX-ish platforms: prefer strtod_l/newlocale when available. We
+     * need to guard use of locale_t/LC_NUMERIC_MASK which may not exist on
+     * all platforms even if strtod_l is present. */
+#if defined(__has_include)
+#if __has_include(<locale.h>) && (__has_include(<xlocale.h>) || defined(__APPLE__))
+    /* Platforms that expose newlocale/strtod_l (glibc via xlocale.h or
+     * BSD/Apple) will compile the following. Use newlocale when present. */
     locale_t loc = newlocale(LC_NUMERIC_MASK, "C", (locale_t)0);
     if (loc)
     {
@@ -55,6 +68,7 @@ double json_strtod(const char *nptr, char **endptr)
         freelocale(loc);
         return val;
     }
+#endif
 #endif
     /* Fallback to global strtod if newlocale is not available */
     return strtod(nptr, endptr);
