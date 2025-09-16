@@ -1,0 +1,13 @@
+AlignConsecutiveAssignments: true
+AlignConsecutiveDeclarations: true
+AlignOperands: true
+AllowShortFunctionsOnASingleLine: Inline
+BasedOnStyle: LLVM
+BreakBeforeBraces: Allman
+ColumnLimit: 120
+IncludeBlocks: Preserve
+IndentWidth: 4
+SortIncludes: Never
+SpaceBeforeParens: ControlStatements
+TabWidth: 4
+UseTab: Never

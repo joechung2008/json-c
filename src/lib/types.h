@@ -1,0 +1,10 @@
+#pragma once
+#include "types/arraytoken.h"
+#include "types/falsetoken.h"
+#include "types/numbertoken.h"
+#include "types/nulltoken.h"
+#include "types/objecttoken.h"
+#include "types/pairtoken.h"
+#include "types/stringtoken.h"
+#include "types/token.h"
+#include "types/truetoken.h"
