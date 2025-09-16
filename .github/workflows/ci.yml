@@ -16,6 +16,7 @@ jobs:
     env:
       CC: gcc
       CXX: g++
+      JSON_C_BUILD_TESTS: "ON"
 
     steps:
       - name: Checkout
