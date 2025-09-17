@@ -6,6 +6,9 @@ Checks: >
   portability-*,
   performance-*,
   readability-*,
+  cert-*,
+  security-*,
+  -cert-err33-c,
   -portability-avoid-pragma-once,
   -readability-braces-around-statements,
   -readability-duplicate-include,
@@ -15,7 +18,6 @@ Checks: >
   -readability-identifier-length,
   -readability-magic-numbers,
   -readability-named-parameter,
-  -readability-uppercase-literal-suffix,
   -clang-analyzer-alpha.*,                    # disable experimental checks
   -modernize-*,                               # disable C++ checks
   -hicpp-*                                    # disable C++ checks

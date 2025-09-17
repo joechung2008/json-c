@@ -181,10 +181,10 @@ static long parse_hexadecimal_code(const char *s)
     char hex[7] = "0x0000"; /* 6 chars + NUL */
     /* Ensure the input has at least 4 characters to copy. */
     if (json_strnlen(s, 5) < 4)
-        return -1l;
+        return -1L;
     _Static_assert(sizeof(hex) >= 7, "hex buffer too small");
     if (json_memcpy(hex + 2, sizeof hex - 2, s, 4) != 0)
-        return -1l;
+        return -1L;
     hex[6] = '\0';
 
     char *endptr;
@@ -195,5 +195,5 @@ static long parse_hexadecimal_code(const char *s)
         return code;
     }
 
-    return -1l;
+    return -1L;
 }
