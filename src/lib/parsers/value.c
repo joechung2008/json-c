@@ -1,11 +1,11 @@
 #include <string.h>
 #include <stdlib.h>
 
-#include "array.h"
-#include "number.h"
-#include "object.h"
-#include "string.h"
-#include "value.h"
+#include "./array.h"
+#include "./number.h"
+#include "./object.h"
+#include "./string.h"
+#include "./value.h"
 
 Token *token_parse(const char *s, bool strict)
 {
@@ -84,6 +84,7 @@ Token *token_parse_value(const char *s, const char *delimiters)
             break;
 
         case Array:
+        {
             ArrayToken *arraytokenp = json_parse_array(s + pos);
             if (arraytokenp != NULL)
             {
@@ -93,8 +94,10 @@ Token *token_parse_value(const char *s, const char *delimiters)
                 break;
             }
             return NULL;
+        }
 
         case False:
+        {
             if (strncmp(s + pos, "false", 5) == 0)
             {
                 FalseToken *falsetokenp = (FalseToken *)malloc(sizeof(FalseToken));
@@ -109,8 +112,10 @@ Token *token_parse_value(const char *s, const char *delimiters)
                 }
             }
             return NULL;
+        }
 
         case Null:
+        {
             if (strncmp(s + pos, "null", 4) == 0)
             {
                 NullToken *nulltokenp = (NullToken *)malloc(sizeof(NullToken));
@@ -124,8 +129,10 @@ Token *token_parse_value(const char *s, const char *delimiters)
                 }
             }
             return NULL;
+        }
 
         case Number:
+        {
             NumberToken *numbertokenp = json_parse_number(s + pos, delimiters);
             if (numbertokenp != NULL)
             {
@@ -135,8 +142,10 @@ Token *token_parse_value(const char *s, const char *delimiters)
                 break;
             }
             return NULL;
+        }
 
         case Object:
+        {
             ObjectToken *objecttokenp = json_parse_object(s + pos);
             if (objecttokenp != NULL)
             {
@@ -146,8 +155,10 @@ Token *token_parse_value(const char *s, const char *delimiters)
                 break;
             }
             return NULL;
+        }
 
         case String:
+        {
             StringToken *stringtokenp = json_parse_string(s + pos);
             if (stringtokenp != NULL)
             {
@@ -157,8 +168,10 @@ Token *token_parse_value(const char *s, const char *delimiters)
                 break;
             }
             return NULL;
+        }
 
         case True:
+        {
             if (strncmp(s + pos, "true", 4) == 0)
             {
                 TrueToken *truetokenp = (TrueToken *)malloc(sizeof(TrueToken));
@@ -173,12 +186,17 @@ Token *token_parse_value(const char *s, const char *delimiters)
                 }
             }
             return NULL;
+        }
 
         case End:
+        {
             break;
+        }
 
         default:
+        {
             return NULL;
+        }
         }
     }
 

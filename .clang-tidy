@@ -1,25 +1,30 @@
 ---
 # Conservative, C-focused clang-tidy configuration for json-c
 Checks: >
-  clang-analyzer-*,
+  clang-analyzer-*
   bugprone-*,
   portability-*,
-  -performance-*,
-  -readability-*,
+  performance-*,
+  readability-*,
+  -readability-braces-around-statements,
+  -readability-duplicate-include,
+  -readability-else-after-return,
+  -readability-function-cognitive-complexity,
+  -readability-identifier-length,
   -readability-magic-numbers,
-  -clang-analyzer-alpha.*,   # experimental analyzer checks — may be noisy
-  -modernize-*,              # C project — disable C++ modernize checks
-  -hicpp-*,                 
-  -bugprone-macro-parentheses
+  -readability-named-parameter,
+  -readability-uppercase-literal-suffix,
+  -clang-analyzer-alpha.*,                    # disable experimental checks
+  -modernize-*,                               # disable C++ checks
+  -hicpp-*                                    # disable C++ checks
 
-HeaderFilterRegex: 'src/|include/'
-WarningsAsErrors: ''
+HeaderFilterRegex: "src/|include/"
+WarningsAsErrors: ""
 FormatStyle: file
 CheckOptions:
-  - key:             readability-identifier-naming.VariableCase
-    value:           lower_case
-  - key:             portability-signed-char.WarnOnSignedChar
-    value:           true
-
+  - key: readability-identifier-naming.VariableCase
+    value: lower_case
+  - key: portability-signed-char.WarnOnSignedChar
+    value: true
 # You can selectively disable additional checks if they prove noisy.
 # Use NOLINT comments for local exceptions when necessary.

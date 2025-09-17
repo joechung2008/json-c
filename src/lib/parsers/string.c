@@ -1,6 +1,6 @@
 #include "../json_internal.h"
-#include "string.h"
-#include "shared.h"
+#include "./string.h"
+#include "./shared.h"
 
 // BUG \uxxxx fails when xxxx > 0xFF
 StringToken *json_parse_string(const char *s)

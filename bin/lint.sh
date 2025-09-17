@@ -46,7 +46,7 @@ for f in "${FILES[@]}"; do
   rc=$?
   # Filter noisy summary/hint lines that clang-tidy prints when it suppresses diagnostics.
   # Use grep -v with a single robust regex to avoid issues with line wrapping and sed dialects.
-  grep -v -E "^[[:space:]]*Suppressed [0-9]+ warnings|header-filter|system-headers|[0-9]+ warnings( and [0-9]+ errors)? generated\.?$" "$tmpf" || true
+  grep -v -E "^[[:space:]]*Suppressed [0-9]+ warnings|header-filter|system-headers|[0-9]+ warning[s]?( and [0-9]+ errors)? generated\.?$" "$tmpf" || true
   rm -f "$tmpf"
   if [[ $rc -ne 0 ]]; then overall_rc=$rc; fi
 done

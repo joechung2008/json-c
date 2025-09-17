@@ -1,9 +1,9 @@
 #include <stdint.h>
 #include <stdlib.h>
 
-#include "types.h"
-#include "token_free.h"
-#include "token_helpers.h"
+#include "./types.h"
+#include "./token_free.h"
+#include "./token_helpers.h"
 
 void token_free(void *tok)
 {
@@ -11,7 +11,7 @@ void token_free(void *tok)
         return;
 
     /* Centralized helper for token header access */
-    int type = token_get_type((void *)tok);
+    int type = token_get_type(tok);
 
     switch (type)
     {

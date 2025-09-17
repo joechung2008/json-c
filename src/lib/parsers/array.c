@@ -1,9 +1,9 @@
 #include <string.h>
 #include <stdlib.h>
 
-#include "array.h"
-#include "shared.h"
-#include "value.h"
+#include "./array.h"
+#include "./shared.h"
+#include "./value.h"
 #include "../token_free.h"
 #include "../token_helpers.h"
 
@@ -70,7 +70,7 @@ ArrayToken *json_parse_array(const char *s)
                 Token *element = token_parse_value(s + pos, " \n\r\t],"); // [ \n\r\t\],]
                 if (element != NULL)
                 {
-                    elements = append_token(elements, (Token *)element);
+                    elements = append_token(elements, element);
                     pos += token_get_skip((void *)element); // token header helper
                     mode = Comma;
                 }

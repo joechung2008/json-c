@@ -1,9 +1,9 @@
 #include <string.h>
 #include <stdlib.h>
 
-#include "pair.h"
-#include "string.h"
-#include "value.h"
+#include "./pair.h"
+#include "./string.h"
+#include "./value.h"
 #include "../token_free.h"
 #include "../token_helpers.h"
 

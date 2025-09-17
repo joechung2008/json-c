@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <json_c/json.h>
-#include "json_internal.h"
+#include "./json_internal.h"
 #include "parsers/value.h"
 #include "types/token.h"
 #include "token_free.h"

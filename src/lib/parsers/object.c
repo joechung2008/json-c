@@ -2,8 +2,8 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include "object.h"
-#include "pair.h"
+#include "./object.h"
+#include "./pair.h"
 #include "../token_free.h"
 
 ObjectToken *json_parse_object(const char *s)
