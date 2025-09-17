@@ -26,14 +26,14 @@ extern "C"
      */
     typedef enum
     {
-        JSON_NULL = 0,
-        JSON_TRUE,
-        JSON_FALSE,
-        JSON_NUMBER,
-        JSON_STRING,
-        JSON_ARRAY,
-        JSON_OBJECT,
-        JSON_PAIR,
+        JSON_NULL       = 0,
+        JSON_TRUE       = 1,
+        JSON_FALSE      = 2,
+        JSON_NUMBER     = 3,
+        JSON_STRING     = 4,
+        JSON_ARRAY      = 5,
+        JSON_OBJECT     = 6,
+        JSON_PAIR       = 7,
         JSON_TYPE_ERROR = 0x7fffffff /* sentinel for errors */
     } json_type_t;
 
