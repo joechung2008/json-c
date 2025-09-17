@@ -48,7 +48,7 @@ int json_memcpy(void *restrict dst, size_t dst_size, const void *restrict src, s
 #endif
 #endif
 
-#if defined(_MSC_VER)
+#ifdef _MSC_VER
 #define HAVE__STRTOD_L 1
 #include <locale.h>
 #endif
