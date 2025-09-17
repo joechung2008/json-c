@@ -10,7 +10,7 @@
       },
       "windows": {
         "command": "bin/build.ps1",
-        "args": ["--Configuration", "Debug"]
+        "args": ["-Configuration", "Debug"]
       },
       "group": {
         "kind": "build",
@@ -30,7 +30,7 @@
       },
       "windows": {
         "command": "bin/build.ps1",
-        "args": ["--Configuration", "Release"]
+        "args": ["-Configuration", "Release"]
       },
       "presentation": {
         "reveal": "always"
@@ -53,6 +53,17 @@
       "linux": {
         "command": "bin/run-tests.sh"
       },
+      "windows": {
+        "command": "bin/run-tests.ps1"
+      },
+      "presentation": {
+        "reveal": "always"
+      },
+      "problemMatcher": []
+    },
+    {
+      "label": "CMake: Run Tests (Windows)",
+      "type": "shell",
       "windows": {
         "command": "bin/run-tests.ps1"
       },
