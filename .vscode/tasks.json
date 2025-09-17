@@ -64,6 +64,7 @@
     {
       "label": "CMake: Run Tests (Windows)",
       "type": "shell",
+      "command": "echo This task is Windows-only",
       "windows": {
         "command": "bin/run-tests.ps1"
       },
