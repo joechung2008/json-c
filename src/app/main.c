@@ -10,14 +10,18 @@ static char *read_stdin_all(size_t *out_len)
     size_t cap  = 4096;
     char  *buf  = malloc(cap);
     if (!buf)
+    {
         return NULL;
+    }
 
     for (;;)
     {
         size_t n = fread(buf + size, 1, cap - size, stdin);
         size += n;
         if (size < cap)
+        {
             break; /* EOF or short read */
+        }
 
         /* need more space */
         size_t newcap = cap * 2;
@@ -44,7 +48,9 @@ static char *read_stdin_all(size_t *out_len)
     }
     buf[size] = '\0';
     if (out_len)
+    {
         *out_len = size;
+    }
     return buf;
 }
 
@@ -91,9 +97,13 @@ int main(int argc, char **argv)
 
     const char *out = json_text(v);
     if (out)
+    {
         fputs(out, stdout);
+    }
     else
+    {
         fputs("json_text returned NULL\n", stderr);
+    }
 
     json_free(v);
     free(input);
