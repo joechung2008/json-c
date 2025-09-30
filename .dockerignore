@@ -1,0 +1,45 @@
+# Ignore build artifacts
+build/
+build-musl/
+*.o
+*.obj
+*.so
+*.so.*
+*.a
+*.exe
+*.dll
+*.dylib
+*.out
+*.log
+*.tmp
+*.swp
+*.swo
+*.pyc
+*.pyo
+*.pyd
+*.gcda
+*.gcno
+*.gcov
+
+# Ignore CMake files
+CMakeFiles/
+CMakeCache.txt
+cmake_install.cmake
+CTestTestfile.cmake
+Makefile
+compile_commands.json
+
+# Ignore test binaries and logs
+tests/json_tests
+tests/*.log
+Testing/
+
+# Ignore editor and OS files
+*.DS_Store
+*.vscode/
+*.idea/
+*.user
+*.sublime*
+
+# Ignore Dockerfile itself (optional, comment out if needed)
+#Dockerfile
