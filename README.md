@@ -4,6 +4,29 @@
 
 MIT
 
+## Prerequisites
+
+### glibc (Linux, WSL, macOS)
+
+- CMake (version 3.15 or newer recommended)
+- GCC (or Clang) toolchain
+- GNU Make or Ninja
+- glibc development headers (usually included with build-essential)
+
+On Ubuntu/WSL:
+
+```bash
+sudo apt update
+sudo apt install build-essential cmake
+```
+
+### Win32 (Windows)
+
+- [Visual Studio 2022 Build Tools](https://visualstudio.microsoft.com/downloads/#build-tools-for-visual-studio-2022) (includes MSVC, CMake, Ninja)
+- PowerShell
+
+The provided PowerShell scripts will attempt to detect and use Visual Studio 2022 automatically.
+
 ## Reference
 
 [json.org](http://json.org)
