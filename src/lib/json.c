@@ -3,10 +3,19 @@
 #include <string.h>
 #include <json_c/json.h>
 #include "./json_internal.h"
-#include "parsers/value.h"
-#include "types/token.h"
-#include "token_free.h"
-#include "token_helpers.h"
+#include "./parsers/value.h"
+#include "./printers/print_array.h"
+#include "./printers/print_false.h"
+#include "./printers/print_null.h"
+#include "./printers/print_number.h"
+#include "./printers/print_object.h"
+#include "./printers/print_pair.h"
+#include "./printers/print_string.h"
+#include "./printers/print_token.h"
+#include "./printers/print_true.h"
+#include "./types/token.h"
+#include "./token_free.h"
+#include "./token_helpers.h"
 
 /* Internal wrapper that can either store raw text (legacy) or a parsed Token* */
 struct json_value
@@ -77,7 +86,12 @@ void json_free(json_value_t *v)
 
 const char *json_text(const json_value_t *v)
 {
-    return v ? v->text : NULL;
+    if (!v || !v->token)
+        return NULL;
+    static char buf[16384];
+    print_token((const Token *)v->token, 0, buf, sizeof(buf));
+    buf[sizeof(buf) - 1] = '\0';
+    return buf;
 }
 
 json_type_t json_value_type(const json_value_t *v)
