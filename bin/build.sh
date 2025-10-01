@@ -81,7 +81,7 @@ case "${BUILD_TYPE,,}" in
 esac
 
 echo "Configuring build (tests: $JSON_C_BUILD_TESTS, type: $BUILD_TYPE)"
-cmake -S "$ROOT_DIR" -B "$BUILD_DIR" -DCMAKE_BUILD_TYPE="$BUILD_TYPE" -DJSON_C_BUILD_TESTS=$JSON_C_BUILD_TESTS -Wno-dev
+cmake -S "$ROOT_DIR" -B "$BUILD_DIR" -DCMAKE_BUILD_TYPE="$BUILD_TYPE" -DJSON_C_BUILD_TESTS=$JSON_C_BUILD_TESTS -DCMAKE_C_FLAGS="-Wall" -Wno-dev
 cmake --build "$BUILD_DIR" --parallel
 
 echo "Build complete. Build artifacts are in: $BUILD_DIR"
