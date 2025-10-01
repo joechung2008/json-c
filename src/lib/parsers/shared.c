@@ -1,5 +1,7 @@
+#include <stdlib.h>
+#include <string.h>
+
 #include "../json_internal.h"
-#include "./shared.h"
 
 // used by number.c and string.c
 char *strncat_dynamic(char *dst, const char *src, size_t n)

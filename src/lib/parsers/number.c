@@ -1,10 +1,11 @@
 #include <errno.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 
+#include "../json_internal.h"
 #include "./number.h"
 #include "./shared.h"
-#include "../json_internal.h"
 
 NumberToken *json_parse_number(const char *s, const char *delimiters)
 {

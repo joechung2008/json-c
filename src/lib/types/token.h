@@ -1,9 +1,8 @@
 #pragma once
-
-typedef void Token;
-
 #include <stddef.h>
 #include <stdint.h>
+
+typedef void Token;
 
 /* Token type tags used at runtime so we can free tokens generically */
 enum TokenType

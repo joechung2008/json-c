@@ -1,9 +1,9 @@
 #include <stdint.h>
 #include <stdlib.h>
 
-#include "./types.h"
 #include "./token_free.h"
 #include "./token_helpers.h"
+#include "./types.h"
 
 void token_free(void *tok)
 {

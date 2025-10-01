@@ -1,6 +1,10 @@
+#include <stddef.h>
+#include <stdlib.h>
+#include <string.h>
+
 #include "../json_internal.h"
-#include "./string.h"
 #include "./shared.h"
+#include "./string.h"
 
 static long parse_hexadecimal_code(const char *s);
 

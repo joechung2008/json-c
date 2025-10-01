@@ -1,4 +1,6 @@
 #include <stdbool.h>
+
+#include "../json_internal.h"
 #include "../types/arraytoken.h"
 #include "../types/falsetoken.h"
 #include "../types/nulltoken.h"
@@ -7,7 +9,6 @@
 #include "../types/pairtoken.h"
 #include "../types/token.h"
 #include "../types/truetoken.h"
-#include "../json_internal.h"
 #include "./print_array.h"
 #include "./print_false.h"
 #include "./print_null.h"

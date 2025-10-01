@@ -1,7 +1,8 @@
+#include <json_c/json.h>
 #include <stdbool.h>
 #include <stdlib.h>
 #include <string.h>
-#include <json_c/json.h>
+
 #include "./json_internal.h"
 #include "./parsers/value.h"
 #include "./printers/print_array.h"
@@ -13,9 +14,9 @@
 #include "./printers/print_string.h"
 #include "./printers/print_token.h"
 #include "./printers/print_true.h"
-#include "./types/token.h"
 #include "./token_free.h"
 #include "./token_helpers.h"
+#include "./types/token.h"
 
 /* Internal wrapper that can either store raw text (legacy) or a parsed Token* */
 struct json_value

@@ -1,10 +1,11 @@
-/* Portable duplication helper for internal use */
 #include <errno.h>
 #include <locale.h>
-#include <stdlib.h>
-#include <stdio.h>
 #include <stdarg.h>
+#include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
+
+#include "./json_internal.h"
 
 #if defined(_WIN32) || defined(_MSC_VER)
 #include <errno.h>
@@ -12,8 +13,6 @@
 #if defined(__GLIBC__)
 #include <stdlib.h>
 #endif
-
-#include "./json_internal.h"
 
 #ifdef __GLIBC__
 /* vasprintf may not be declared in <stdio.h> depending on feature test macros */

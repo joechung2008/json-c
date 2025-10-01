@@ -1,9 +1,9 @@
 #include <stdbool.h>
 #include <stdio.h>
-#include <string.h>
+
+#include "../json_internal.h"
 #include "../types/arraytoken.h"
 #include "../types/token.h"
-#include "../json_internal.h"
 
 int print_array_token(const ArrayToken *tok, int indent, char *out, size_t outsz, bool suppress_leading_indent)
 {

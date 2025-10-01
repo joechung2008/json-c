@@ -1,11 +1,11 @@
 #include <string.h>
 #include <stdlib.h>
 
+#include "../token_free.h"
+#include "../token_helpers.h"
 #include "./array.h"
 #include "./shared.h"
 #include "./value.h"
-#include "../token_free.h"
-#include "../token_helpers.h"
 
 // Token header contract: every token begins with two ints (skip, type).
 // Use TOKEN_SKIP(t) and TOKEN_TYPE(t) from src/lib/token_helpers.h to access these fields.

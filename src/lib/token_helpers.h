@@ -6,7 +6,6 @@
  * assumptions about token layout and provides small helpers.
  */
 #pragma once
-
 #include "types/token.h"
 
 /* We expect every concrete token struct to begin with two ints:
