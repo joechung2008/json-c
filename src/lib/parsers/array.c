@@ -148,7 +148,7 @@ static Tokens *append_token(Tokens *tokensp, Token *tokenp)
     }
     else
     {
-        Token **tmp = (Token **)realloc(tokensp->tokens, (1 + tokensp->size) * sizeof(Token *));
+        Token **tmp = (Token **)realloc((void *)tokensp->tokens, (1 + tokensp->size) * sizeof(Token *));
         if (!tmp)
         {
             /* leave tokensp unchanged; caller should handle cleanup */

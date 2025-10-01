@@ -54,7 +54,7 @@ void token_free(void *tok)
             {
                 token_free(a->elements->tokens[i]);
             }
-            free(a->elements->tokens);
+            free((void *)a->elements->tokens);
             free(a->elements);
         }
         free(a);
@@ -69,7 +69,7 @@ void token_free(void *tok)
             {
                 token_free(o->members->pairs[i]);
             }
-            free(o->members->pairs);
+            free((void *)o->members->pairs);
             free(o->members);
         }
         free(o);
@@ -89,7 +89,7 @@ void free_tokens(struct Tokens *t)
     {
         token_free(t->tokens[i]);
     }
-    free(t->tokens);
+    free((void *)t->tokens);
     free(t);
 }
 
@@ -101,6 +101,6 @@ void free_pairtokens(struct PairTokens *p)
     {
         token_free(p->pairs[i]);
     }
-    free(p->pairs);
+    free((void *)p->pairs);
     free(p);
 }

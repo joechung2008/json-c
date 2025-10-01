@@ -143,7 +143,7 @@ static PairTokens *append_pair(PairTokens *tokensp, PairToken *tokenp)
     }
     else
     {
-        PairToken **tmp = (PairToken **)realloc(tokensp->pairs, (1 + tokensp->size) * sizeof(PairToken *));
+        PairToken **tmp = (PairToken **)realloc((void *)tokensp->pairs, (1 + tokensp->size) * sizeof(PairToken *));
         if (!tmp)
         {
             return NULL;

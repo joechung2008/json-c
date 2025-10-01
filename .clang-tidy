@@ -1,13 +1,14 @@
 ---
 # Conservative, C-focused clang-tidy configuration for json-c
 Checks: >
-  clang-analyzer-*
   bugprone-*,
-  portability-*,
-  performance-*,
-  readability-*,
   cert-*,
+  clang-analyzer-*,
+  performance-*,
+  portability-*,
+  readability-*,
   security-*,
+  -bugprone-easily-swappable-parameters,
   -cert-err33-c,
   -portability-avoid-pragma-once,
   -readability-braces-around-statements,
