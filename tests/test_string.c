@@ -5,98 +5,109 @@
 #include <stdint.h>
 #include <stdlib.h>
 #include <string.h>
-#include <criterion/criterion.h>
+#include <cmocka.h>
 
-Test(string, test_parse_string_simple)
+void test_parse_string_simple(void **state)
 {
+    (void)state;
     json_value_t *v = json_parse("\"hello\"");
-    cr_assert_not_null(v);
+    assert_non_null(v);
     const char *s = json_value_get_string(v);
-    cr_assert_str_eq(s, "hello");
+    assert_string_equal(s, "hello");
     json_free(v);
 }
 
-Test(string, test_parse_string_empty)
+void test_parse_string_empty(void **state)
 {
+    (void)state;
     json_value_t *v = json_parse("\"\"");
-    cr_assert_not_null(v);
+    assert_non_null(v);
     json_free(v);
 }
 
-Test(string, test_parse_string_escapes_quotes)
+void test_parse_string_escapes_quotes(void **state)
 {
+    (void)state;
     json_value_t *v = json_parse("\"foo \\\"bar\\\" baz\"");
-    cr_assert_not_null(v);
+    assert_non_null(v);
     json_free(v);
 }
 
-Test(string, test_parse_string_unicode)
+void test_parse_string_unicode(void **state)
 {
+    (void)state;
     json_value_t *v = json_parse("\"\\u0041\\u0042\\u0043\"");
-    cr_assert_not_null(v);
+    assert_non_null(v);
     json_free(v);
 }
 
-Test(string, test_parse_string_escapes)
+void test_parse_string_escapes(void **state)
 {
+    (void)state;
     json_value_t *v = json_parse("\"he\\\"llo\"");
-    cr_assert_not_null(v);
+    assert_non_null(v);
     const char *s = json_value_get_string(v);
-    cr_assert_str_eq(s, "he\"llo");
+    assert_string_equal(s, "he\"llo");
     json_free(v);
 }
 
-Test(string, test_parse_string_escapes_backslash_and_slash)
+void test_parse_string_escapes_backslash_and_slash(void **state)
 {
+    (void)state;
     json_value_t *v = json_parse("\"he\\\\llo\"");
-    cr_assert_not_null(v);
+    assert_non_null(v);
     const char *s = json_value_get_string(v);
-    cr_assert_str_eq(s, "he\\llo");
+    assert_string_equal(s, "he\\llo");
     json_free(v);
 
     v = json_parse("\"he\\/llo\"");
-    cr_assert_not_null(v);
+    assert_non_null(v);
     s = json_value_get_string(v);
-    cr_assert_str_eq(s, "he/llo");
+    assert_string_equal(s, "he/llo");
     json_free(v);
 }
 
-Test(string, test_parse_string_invalid_escape)
+void test_parse_string_invalid_escape(void **state)
 {
+    (void)state;
     json_value_t *v = json_parse("\"hello\\x\"");
-    cr_assert_null(v);
+    assert_null(v);
 }
 
-Test(string, test_parse_string_invalid_unicode)
+void test_parse_string_invalid_unicode(void **state)
 {
+    (void)state;
     json_value_t *v = json_parse("\"\\uXYZ\"");
-    cr_assert_null(v);
+    assert_null(v);
 
     v = json_parse("\"\\u123\"");
-    cr_assert_null(v);
+    assert_null(v);
 }
 
-Test(string, test_parse_string_missing_opening_quote)
+void test_parse_string_missing_opening_quote(void **state)
 {
+    (void)state;
     /* legacy spec: "hello" without opening quote should be a syntax error */
     json_value_t *v = json_parse("hello\"");
-    cr_assert_null(v);
+    assert_null(v);
 }
 
-Test(string, test_parse_string_unterminated)
+void test_parse_string_unterminated(void **state)
 {
+    (void)state;
     /* Unterminated string should be a parse error */
     json_value_t *v = json_parse("\"unterminated");
-    cr_assert_null(v);
+    assert_null(v);
     v = json_parse("{\"a\":\"b");
-    cr_assert_null(v);
+    assert_null(v);
 }
 
-Test(string, test_parse_string_malformed_escape_sequences)
+void test_parse_string_malformed_escape_sequences(void **state)
 {
+    (void)state;
     /* Backslash followed by nothing or an invalid escape should fail */
     json_value_t *v = json_parse("\"bad\\\"");
-    cr_assert_null(v);
+    assert_null(v);
     v = json_parse("\"bad\\z\"");
-    cr_assert_null(v);
+    assert_null(v);
 }

@@ -1,6 +1,6 @@
 # Running tests (cross-platform)
 
-This project uses CMake and Criterion for unit tests. The tests are configured to fetch Criterion automatically if it is not present on the system (FetchContent pinned to Criterion v2.4.2), so you do not need to install Criterion manually.
+This project uses CMake and cmocka for unit tests. The tests are configured to fetch cmocka automatically if it is not present on the system (FetchContent pinned to cmocka v1.1.5), so you do not need to install cmocka manually.
 
 ## Quick commands (Linux/macOS/Windows with CMake)
 
@@ -24,7 +24,7 @@ Run tests with CTest (show failures):
 
 ## Troubleshooting
 
-- If the FetchContent download fails (e.g., no network), you can install Criterion on the system and rerun CMake; the top-level `tests/CMakeLists.txt` prefers an installed Criterion when available.
+- If the FetchContent download fails (e.g., no network), you can install cmocka on the system and rerun CMake; the top-level `tests/CMakeLists.txt` prefers an installed cmocka when available.
 
 - If tests fail with a runtime loader error about missing shared libraries on Windows, ensure the `build/` step finished; CMake is set to copy the `json_c` DLL next to tests, but if you're running tests from a custom location you may need to set `PATH` to include `build/`.
 
@@ -47,7 +47,7 @@ cmake -S .. -B . -DCMAKE_BUILD_TYPE=Debug \
 cmake --build . -j$(nproc)
 ```
 
-- Run the failing test(s) directly to get full sanitizer output (the test runner may swallow some output):
+   - Run the failing test(s) directly to get full sanitizer output (the test runner may swallow some output):
 
 ```bash
 ./tests/json_tests --run test_name
@@ -72,8 +72,8 @@ export ASAN_OPTIONS=detect_leaks=1:abort_on_error=1:log_path=asan-log
 ./tests/json_tests --run test_name
 ```
 
-- `abort_on_error=1` makes the process exit immediately on error which can make debugging under gdb easier.
-- `log_path` writes the report to a file (useful when CI truncates logs).
+   - `abort_on_error=1` makes the process exit immediately on error which can make debugging under gdb easier.
+   - `log_path` writes the report to a file (useful when CI truncates logs).
 
 4. Reproduce in a debugger (gdb)
 
@@ -85,7 +85,7 @@ run
 backtrace
 ```
 
-- Because ASan aborts on error (with `abort_on_error=1`) you'll usually get a core-like state to inspect with `bt`.
+   - Because ASan aborts on error (with `abort_on_error=1`) you'll usually get a core-like state to inspect with `bt`.
 
 5. Minimize to a small reproducer
 
@@ -104,4 +104,4 @@ backtrace
 
 8. Add a regression test
 
-   - Once fixed, add a unit test (Criterion) that reproduces the failure and add it to `tests/` so CI prevents regressions.
+   - Once fixed, add a unit test (cmocka) that reproduces the failure and add it to `tests/` so CI prevents regressions.

@@ -5,118 +5,126 @@
 #include <stdint.h>
 #include <stdlib.h>
 #include <string.h>
-#include <criterion/criterion.h>
+#include <cmocka.h>
 
-Test(object, test_parse_empty_object)
+void test_parse_empty_object(void **state)
 {
+    (void)state;
     json_value_t *v = json_parse("{}");
-    cr_assert_not_null(v);
-    cr_assert_eq(json_value_type(v), JSON_OBJECT);
-    cr_assert_eq((int)json_object_size(v), 0);
+    assert_non_null(v);
+    assert_int_equal(json_value_type(v), JSON_OBJECT);
+    assert_int_equal((int)json_object_size(v), 0);
     json_free(v);
 }
 
-Test(object, test_parse_object_single_and_multiple)
+void test_parse_object_single_and_multiple(void **state)
 {
+    (void)state;
     void *v;
 
     v = json_parse("{\"a\":1}");
-    cr_assert_not_null(v);
+    assert_non_null(v);
     /* textual checks for key presence */
-    cr_assert_not_null(strstr(json_text((const json_value_t *)v), "\"a\""));
+    assert_non_null(strstr(json_text((const json_value_t *)v), "\"a\""));
     json_free((json_value_t *)v);
 
     v = json_parse("{\"x\":true,\"y\":null,\"z\":\"abc\"}");
-    cr_assert_not_null(v);
-    cr_assert_not_null(strstr(json_text((const json_value_t *)v), "\"x\""));
-    cr_assert_not_null(strstr(json_text((const json_value_t *)v), "\"y\""));
-    cr_assert_not_null(strstr(json_text((const json_value_t *)v), "\"z\""));
+    assert_non_null(v);
+    assert_non_null(strstr(json_text((const json_value_t *)v), "\"x\""));
+    assert_non_null(strstr(json_text((const json_value_t *)v), "\"y\""));
+    assert_non_null(strstr(json_text((const json_value_t *)v), "\"z\""));
     json_free((json_value_t *)v);
 }
 
-Test(object, test_parse_object_nested_and_mixed)
+void test_parse_object_nested_and_mixed(void **state)
 {
+    (void)state;
     void *v;
 
     v = json_parse("{\"outer\":{\"inner\":42}}");
-    cr_assert_not_null(v);
-    cr_assert_not_null(strstr(json_text((const json_value_t *)v), "outer"));
-    cr_assert_not_null(strstr(json_text((const json_value_t *)v), "inner"));
+    assert_non_null(v);
+    assert_non_null(strstr(json_text((const json_value_t *)v), "outer"));
+    assert_non_null(strstr(json_text((const json_value_t *)v), "inner"));
     json_free((json_value_t *)v);
 
     v = json_parse("{\"arr\":[1,2,3]}");
-    cr_assert_not_null(v);
-    cr_assert_not_null(strstr(json_text((const json_value_t *)v), "arr"));
+    assert_non_null(v);
+    assert_non_null(strstr(json_text((const json_value_t *)v), "arr"));
     json_free((json_value_t *)v);
 
     v = json_parse("{\"num\":123,\"str\":\"abc\",\"bool\":false,\"nul\":null}");
-    cr_assert_not_null(v);
-    cr_assert_not_null(strstr(json_text((const json_value_t *)v), "num"));
-    cr_assert_not_null(strstr(json_text((const json_value_t *)v), "str"));
-    cr_assert_not_null(strstr(json_text((const json_value_t *)v), "bool"));
-    cr_assert_not_null(strstr(json_text((const json_value_t *)v), "nul"));
+    assert_non_null(v);
+    assert_non_null(strstr(json_text((const json_value_t *)v), "num"));
+    assert_non_null(strstr(json_text((const json_value_t *)v), "str"));
+    assert_non_null(strstr(json_text((const json_value_t *)v), "bool"));
+    assert_non_null(strstr(json_text((const json_value_t *)v), "nul"));
     json_free((json_value_t *)v);
 }
 
-Test(object, test_parse_object_empty)
+void test_parse_object_empty(void **state)
 {
+    (void)state;
     json_value_t *v = json_parse("{}");
-    cr_assert_not_null(v);
-    cr_assert_eq(json_value_type(v), JSON_OBJECT);
-    cr_assert_eq((int)json_object_size(v), 0);
+    assert_non_null(v);
+    assert_int_equal(json_value_type(v), JSON_OBJECT);
+    assert_int_equal((int)json_object_size(v), 0);
     json_free(v);
 }
 
-Test(object, test_parse_object_single_pair)
+void test_parse_object_single_pair(void **state)
 {
+    (void)state;
     json_value_t *v = json_parse("{\"a\":1}");
-    cr_assert_not_null(v);
-    cr_assert_eq(json_value_type(v), JSON_OBJECT);
-    cr_assert_eq((int)json_object_size(v), 1);
+    assert_non_null(v);
+    assert_int_equal(json_value_type(v), JSON_OBJECT);
+    assert_int_equal((int)json_object_size(v), 1);
 
     const char *k = json_object_key(v, 0);
-    cr_assert_str_eq(k, "a");
+    assert_string_equal(k, "a");
 
     json_value_t *val = json_object_value(v, 0);
-    cr_assert_not_null(val);
+    assert_non_null(val);
     double d;
-    cr_assert(json_value_get_number(val, &d));
-    cr_assert(d == 1.0);
+    assert_true(json_value_get_number(val, &d));
+    assert_true(d == 1.0);
     json_value_free_wrapper(val);
 
     json_free(v);
 }
 
-Test(object, test_parse_object_multiple_pairs_and_keys)
+void test_parse_object_multiple_pairs_and_keys(void **state)
 {
+    (void)state;
     json_value_t *v = json_parse("{\"a\":1,\"b\":2}");
-    cr_assert_not_null(v);
-    cr_assert_eq((int)json_object_size(v), 2);
+    assert_non_null(v);
+    assert_int_equal((int)json_object_size(v), 2);
     const char *k0 = json_object_key(v, 0);
     const char *k1 = json_object_key(v, 1);
     /* keys may be in insertion order; assert both present */
-    cr_assert((strcmp(k0, "a") == 0 && strcmp(k1, "b") == 0) || (strcmp(k0, "b") == 0 && strcmp(k1, "a") == 0));
+    assert_true((strcmp(k0, "a") == 0 && strcmp(k1, "b") == 0) || (strcmp(k0, "b") == 0 && strcmp(k1, "a") == 0));
 
     json_free(v);
 }
 
-Test(object, test_parse_pair_key_value_parsing)
+void test_parse_pair_key_value_parsing(void **state)
 {
+    (void)state;
     json_value_t *v = json_parse("{\"name\": \"John\"}");
-    cr_assert_not_null(v);
+    assert_non_null(v);
     const char *k = json_object_key(v, 0);
-    cr_assert_str_eq(k, "name");
+    assert_string_equal(k, "name");
     json_value_t *val = json_object_value(v, 0);
-    cr_assert_not_null(val);
+    assert_non_null(val);
     const char *s = json_value_get_string(val);
-    cr_assert_str_eq(s, "John");
+    assert_string_equal(s, "John");
     json_value_free_wrapper(val);
     json_free(v);
 }
 
-Test(object, test_parse_object_unexpected_delimiter)
+void test_parse_object_unexpected_delimiter(void **state)
 {
+    (void)state;
     /* legacy spec expects a SyntaxError for `{"a":1,}` */
     json_value_t *v = json_parse("{\"a\":1,}");
-    cr_assert_null(v);
+    assert_null(v);
 }

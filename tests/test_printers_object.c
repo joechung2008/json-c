@@ -1,4 +1,3 @@
-#include <criterion/criterion.h>
 #include <assert.h>
 #include <string.h>
 #include <stdio.h>
@@ -7,8 +6,9 @@
 #include "../src/lib/parsers/value.h"
 #include "../src/lib/token_free.h"
 
-Test(printers_object, test_print_object_token)
+void test_print_object_token(void **state)
 {
+    (void)state;
     ObjectToken tok = {.skip = 0, .members = NULL};
     char        buf[128];
     int         n = print_object_token(&tok, 2, buf, sizeof(buf), false);
@@ -18,8 +18,9 @@ Test(printers_object, test_print_object_token)
     assert(strncmp(buf, "ObjectToken", 11) == 0);
 }
 
-Test(printers_object, test_print_object_with_pair_array_value)
+void test_print_object_with_pair_array_value(void **state)
 {
+    (void)state;
     Token *t = token_parse("{\"key\":[]}", false);
     assert(t != NULL);
     ObjectToken *tok = (ObjectToken *)t;
@@ -30,8 +31,9 @@ Test(printers_object, test_print_object_with_pair_array_value)
     token_free(t);
 }
 
-Test(printers_object, test_print_object_with_pair_object_value)
+void test_print_object_with_pair_object_value(void **state)
 {
+    (void)state;
     Token *t = token_parse("{\"key\":{}}", false);
     assert(t != NULL);
     ObjectToken *tok = (ObjectToken *)t;

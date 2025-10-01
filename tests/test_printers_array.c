@@ -1,4 +1,3 @@
-#include <criterion/criterion.h>
 #include <assert.h>
 #include <string.h>
 #include <stdio.h>
@@ -7,8 +6,9 @@
 #include "../src/lib/parsers/value.h"
 #include "../src/lib/token_free.h"
 
-Test(printers_array, test_print_array_token)
+void test_print_array_token(void **state)
 {
+    (void)state;
     ArrayToken tok = {.skip = 0, .elements = NULL};
     char       buf[128];
     int        n = print_array_token(&tok, 2, buf, sizeof(buf), false);
@@ -18,8 +18,9 @@ Test(printers_array, test_print_array_token)
     assert(strncmp(buf, "ArrayToken", 10) == 0);
 }
 
-Test(printers_array, test_print_array_with_array_element)
+void test_print_array_with_array_element(void **state)
 {
+    (void)state;
     Token *t = token_parse("[[]]", false);
     assert(t != NULL);
     ArrayToken *tok = (ArrayToken *)t;
@@ -30,8 +31,9 @@ Test(printers_array, test_print_array_with_array_element)
     token_free(t);
 }
 
-Test(printers_array, test_print_array_with_object_element)
+void test_print_array_with_object_element(void **state)
 {
+    (void)state;
     Token *t = token_parse("[{}]", false);
     assert(t != NULL);
     ArrayToken *tok = (ArrayToken *)t;

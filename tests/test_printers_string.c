@@ -1,11 +1,11 @@
-#include <criterion/criterion.h>
 #include <assert.h>
 #include <stdio.h>
 #include <string.h>
 #include "../src/lib/printers/print_string.h"
 
-Test(printers_string, test_print_string_token)
+void test_print_string_token(void **state)
 {
+    (void)state;
     StringToken tok = {.skip = 0, .value = "hello"};
     char        buf[128];
     int         n = print_string_token(&tok, 2, buf, sizeof(buf), false);
