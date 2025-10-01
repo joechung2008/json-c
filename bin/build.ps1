@@ -47,7 +47,7 @@ else {
 # -DCMAKE_BUILD_TYPE at configure time because it is ignored and
 # causes warnings like "Ignoring extra path from command line: 'Debug'".
 # The configuration (Debug/Release) is selected at build time with --config.
-$cmakeArgs = @('-S', $RootDir, '-B', $BuildDir, '-G', $Generator, '-A', $Arch, '-DCMAKE_C_FLAGS="-Wall"', '-Wno-dev')
+$cmakeArgs = @('-S', $RootDir, '-B', $BuildDir, '-G', $Generator, '-A', $Arch, '-DCMAKE_C_FLAGS="-W3"', '-Wno-dev')
 if ($BuildTests) { $cmakeArgs += '-DJSON_C_BUILD_TESTS=ON' }
 cmake @cmakeArgs
 cmake --build $BuildDir --config $Configuration --parallel
