@@ -105,6 +105,7 @@ json_type_t json_value_type(const json_value_t *v)
     case TOKEN_NULL:
         return JSON_NULL;
     case TOKEN_TRUE:
+        return JSON_TRUE;
     case TOKEN_FALSE:
         return JSON_FALSE;
     case TOKEN_NUMBER:
