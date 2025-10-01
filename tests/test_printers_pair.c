@@ -4,8 +4,9 @@
 #include <string.h>
 #include "../src/lib/printers/print_pair.h"
 
-void test_print_pair_token()
+void test_print_pair_token(void **state)
 {
+    (void)state;
     PairToken tok = {.skip = 0, .key = NULL, .value = NULL};
     char      buf[128];
     int       n = print_pair_token(&tok, 2, buf, sizeof(buf), false);
