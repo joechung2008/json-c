@@ -1,4 +1,5 @@
 #pragma once
 #include <stdio.h>
+#include <stdbool.h>
 #include "../types/objecttoken.h"
-int print_object_token(const ObjectToken *tok, int indent, char *out, size_t outsz);
+int print_object_token(const ObjectToken *tok, int indent, char *out, size_t outsz, bool suppress_leading_indent);

@@ -1,8 +1,12 @@
 #include <stdio.h>
+#include <stdbool.h>
 #include "../types/truetoken.h"
 #include "../json_internal.h"
 
-int print_true_token(const TrueToken *tok, int indent, char *out, size_t outsz)
+int print_true_token(const TrueToken *tok, int indent, char *out, size_t outsz, bool suppress_leading_indent)
 {
-    return json_snprintf(out, outsz, "%*sTrueToken { skip: %d }\n", indent, "", tok->skip);
+    if (suppress_leading_indent)
+        return json_snprintf(out, outsz, "TrueToken { skip: %d }\n", tok->skip);
+    else
+        return json_snprintf(out, outsz, "%*sTrueToken { skip: %d }\n", indent, "", tok->skip);
 }

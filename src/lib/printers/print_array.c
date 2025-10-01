@@ -1,13 +1,18 @@
 #include <stdio.h>
+#include <stdbool.h>
 #include <string.h>
 #include "../types/arraytoken.h"
 #include "../types/token.h"
 #include "../json_internal.h"
 
-int print_array_token(const ArrayToken *tok, int indent, char *out, size_t outsz)
+int print_array_token(const ArrayToken *tok, int indent, char *out, size_t outsz, bool suppress_leading_indent)
 {
-    int written = json_snprintf(out, outsz, "%*sArrayToken { skip: %d, elements: [\n", indent, "", tok->skip);
-    int total   = written > 0 ? written : 0;
+    int written;
+    if (suppress_leading_indent)
+        written = json_snprintf(out, outsz, "ArrayToken { skip: %d, elements: [\n", tok->skip);
+    else
+        written = json_snprintf(out, outsz, "%*sArrayToken { skip: %d, elements: [\n", indent, "", tok->skip);
+    int total = written > 0 ? written : 0;
     if (tok->elements && tok->elements->tokens)
     {
         for (int i = 0; i < tok->elements->size && total < (int)outsz; ++i)
@@ -16,8 +21,8 @@ int print_array_token(const ArrayToken *tok, int indent, char *out, size_t outsz
             if (!elem)
                 continue;
             // Recursively print the element. Assume a function: print_token(const Token*, int, char*, size_t)
-            extern int print_token(const Token *tok, int indent, char *out, size_t outsz);
-            written = print_token(elem, indent + 2, out + total, outsz - total);
+            extern int print_token(const Token *tok, int indent, char *out, size_t outsz, bool suppress_leading_indent);
+            written = print_token(elem, indent + 2, out + total, outsz - total, false);
             total += (written > 0 ? written : 0);
         }
     }

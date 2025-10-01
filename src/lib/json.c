@@ -89,7 +89,7 @@ const char *json_text(const json_value_t *v)
     if (!v || !v->token)
         return NULL;
     static char buf[16384];
-    print_token((const Token *)v->token, 0, buf, sizeof(buf));
+    print_token((const Token *)v->token, 0, buf, sizeof(buf), false);
     buf[sizeof(buf) - 1] = '\0';
     return buf;
 }
