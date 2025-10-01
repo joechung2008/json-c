@@ -14,7 +14,7 @@ extern "C"
 
     /* Portable checked memcpy: returns 0 on success, -1 on error. dst_size is
      * the size in bytes of the destination buffer. Implemented in
-     * json_compat.c as json_memcpy().
+     * json_internal.c as json_memcpy().
      */
     int json_memcpy(void *restrict dst, size_t dst_size, const void *restrict src, size_t n);
 
