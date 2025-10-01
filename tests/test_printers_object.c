@@ -12,7 +12,7 @@ void test_print_object_token()
     char        buf[128];
     int         n = print_object_token(&tok, 2, buf, sizeof(buf), false);
     assert(strstr(buf, "ObjectToken") && n > 0);
-    n = print_object_token(&tok, 0, buf, sizeof(buf), true);
+    print_object_token(&tok, 0, buf, sizeof(buf), true);
     assert(strncmp(buf, "ObjectToken", 11) == 0);
 }
 

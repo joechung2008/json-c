@@ -12,7 +12,7 @@ void test_print_array_token()
     char       buf[128];
     int        n = print_array_token(&tok, 2, buf, sizeof(buf), false);
     assert(strstr(buf, "ArrayToken") && n > 0);
-    n = print_array_token(&tok, 0, buf, sizeof(buf), true);
+    print_array_token(&tok, 0, buf, sizeof(buf), true);
     assert(strncmp(buf, "ArrayToken", 10) == 0);
 }
 

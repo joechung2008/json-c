@@ -1,13 +1,10 @@
 /* Portable duplication helper for internal use */
-#if defined(__GLIBC__)
-#define _GNU_SOURCE
-#endif
 #include <errno.h>
 #include <locale.h>
 #include <stdlib.h>
-#include <string.h>
 #include <stdio.h>
 #include <stdarg.h>
+#include <string.h>
 
 #if defined(_WIN32) || defined(_MSC_VER)
 #include <errno.h>
@@ -17,6 +14,11 @@
 #endif
 
 #include "./json_internal.h"
+
+#ifdef __GLIBC__
+/* vasprintf may not be declared in <stdio.h> depending on feature test macros */
+int vasprintf(char **strp, const char *fmt, va_list ap);
+#endif
 
 #if defined(__STDC_VERSION__) && (__STDC_VERSION__ >= 202311L)
 /* C23 added strdup but not a locale-specific strtod wrapper; feature-test below */
@@ -31,17 +33,23 @@ int json_memcpy(void *restrict dst, size_t dst_size, const void *restrict src, s
 {
 #if defined(HAVE_MEMCPY_S) || defined(_MSC_VER)
     if (memcpy_s(dst, dst_size, src, n) != 0)
+    {
         return -1;
+    }
     return 0;
 #else
     /* Portable replacement for memcpy: validate and do a safe byte copy to satisfy static analyzers */
     if (dst == NULL || src == NULL || dst_size < n)
+    {
         return -1;
+    }
 
     unsigned char       *d  = (unsigned char *)dst;
     const unsigned char *s2 = (const unsigned char *)src;
     for (size_t i = 0; i < n; ++i)
+    {
         d[i] = s2[i];
+    }
 
     return 0;
 #endif
@@ -68,7 +76,9 @@ int json_memcpy(void *restrict dst, size_t dst_size, const void *restrict src, s
 char *json_strdup(const char *s)
 {
     if (!s)
+    {
         return NULL;
+    }
 
 #if defined(__STDC_VERSION__) && (__STDC_VERSION__ >= 202311L)
     return strdup(s);
@@ -78,7 +88,9 @@ char *json_strdup(const char *s)
     size_t n = strlen(s) + 1;
     char  *p = (char *)malloc(n);
     if (!p)
+    {
         return NULL;
+    }
     if (json_memcpy(p, n, s, n) != 0)
     {
         free(p);
@@ -183,11 +195,16 @@ int json_snprintf(char *buf, size_t bufsz, const char *fmt, ...)
     if (n < 0 || (size_t)n >= bufsz || !tmp)
     {
         if (tmp)
+        {
             free(tmp);
+        }
         abort();
     }
-    strncpy(buf, tmp, bufsz - 1);
-    buf[bufsz - 1] = '\0';
+    if (json_memcpy(buf, bufsz, tmp, n) != 0)
+    {
+        abort();
+    }
+    buf[n] = '\0';
     free(tmp);
     return n;
 #else
