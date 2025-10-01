@@ -16,7 +16,7 @@ void test_parse_simple_array(void **state)
     assert_int_equal(json_value_type(v), JSON_ARRAY);
     assert_int_equal((int)json_array_length(v), 3);
 
-    double d;
+    double        d;
     json_value_t *e0 = json_array_get(v, 0);
     assert_true(json_value_get_number(e0, &d));
     assert_true(d == 1.0);

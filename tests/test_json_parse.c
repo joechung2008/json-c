@@ -11,8 +11,8 @@
 static void test_parse_simple(void **state)
 {
     (void)state;
-    const char *text = "{\"ok\":true}";
-    json_value_t *v = json_parse(text);
+    const char   *text = "{\"ok\":true}";
+    json_value_t *v    = json_parse(text);
     assert_non_null(v);
     assert_int_equal(json_value_type(v), JSON_OBJECT);
     assert_int_equal((int)json_object_size(v), 1);

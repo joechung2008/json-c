@@ -12,8 +12,8 @@
 void test_parse_number_simple(void **state)
 {
     (void)state;
-    const char *input = "12345";
-    json_value_t *v = json_parse(input);
+    const char   *input = "12345";
+    json_value_t *v     = json_parse(input);
     assert_non_null(v);
     assert_int_equal(json_value_type(v), JSON_NUMBER);
     double d;
