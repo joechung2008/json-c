@@ -3,5 +3,5 @@
 
 int print_null_token(const NullToken *tok, int indent, char *out, size_t outsz)
 {
-    return snprintf(out, outsz, "%*sNullToken { skip: %d, type: %d }\n", indent, "", tok->skip, tok->type);
+    return snprintf(out, outsz, "%*sNullToken { skip: %d }\n", indent, "", tok->skip);
 }

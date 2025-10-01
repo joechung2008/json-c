@@ -5,7 +5,7 @@
 
 int print_array_token(const ArrayToken *tok, int indent, char *out, size_t outsz)
 {
-    int written = snprintf(out, outsz, "%*sArrayToken { skip: %d, type: %d, elements: [\n", indent, "", tok->skip, tok->type);
+    int written = snprintf(out, outsz, "%*sArrayToken { skip: %d, elements: [\n", indent, "", tok->skip);
     int total = written > 0 ? written : 0;
     if (tok->elements && tok->elements->tokens) {
         for (int i = 0; i < tok->elements->size && total < (int)outsz; ++i) {

@@ -3,7 +3,7 @@
 
 int print_object_token(const ObjectToken *tok, int indent, char *out, size_t outsz)
 {
-    int written = snprintf(out, outsz, "%*sObjectToken { skip: %d, type: %d, pairs: [\n", indent, "", tok->skip, tok->type);
+    int written = snprintf(out, outsz, "%*sObjectToken { skip: %d, pairs: [\n", indent, "", tok->skip);
     int total = written > 0 ? written : 0;
     if (tok->members && tok->members->pairs) {
         for (int i = 0; i < tok->members->size && total < (int)outsz; ++i) {
