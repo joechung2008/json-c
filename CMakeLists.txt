@@ -5,6 +5,11 @@ set(CMAKE_C_STANDARD 17)
 set(CMAKE_C_STANDARD_REQUIRED ON)
 set(CMAKE_C_EXTENSIONS OFF)
 
+# Export compile commands for clang-tidy (Linux/Mac only, avoids Windows symlink issues)
+if(UNIX)
+    set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
+endif()
+
 # Option to enable building tests; default is OFF so plain builds don't fail
 option(JSON_C_BUILD_TESTS "Build json-c tests" OFF)
 
