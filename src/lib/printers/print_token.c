@@ -1,3 +1,4 @@
+#include <stdbool.h>
 #include "../types/arraytoken.h"
 #include "../types/falsetoken.h"
 #include "../types/nulltoken.h"
@@ -6,6 +7,7 @@
 #include "../types/pairtoken.h"
 #include "../types/token.h"
 #include "../types/truetoken.h"
+#include "../json_internal.h"
 #include "./print_array.h"
 #include "./print_false.h"
 #include "./print_null.h"
@@ -15,8 +17,6 @@
 #include "./print_string.h"
 #include "./print_token.h"
 #include "./print_true.h"
-#include "../json_internal.h"
-#include <stdbool.h>
 
 int print_token(const Token *token, int indent, char *out, size_t outsz, bool suppress_leading_indent)
 {

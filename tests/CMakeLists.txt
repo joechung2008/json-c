@@ -47,6 +47,12 @@ target_sources(json_tests PRIVATE
     ${CMAKE_CURRENT_SOURCE_DIR}/test_pair.c
     ${CMAKE_CURRENT_SOURCE_DIR}/test_string.c
     ${CMAKE_CURRENT_SOURCE_DIR}/test_value.c
+    ${CMAKE_CURRENT_SOURCE_DIR}/test_printers_value.c
+    ${CMAKE_CURRENT_SOURCE_DIR}/test_printers_number.c
+    ${CMAKE_CURRENT_SOURCE_DIR}/test_printers_string.c
+    ${CMAKE_CURRENT_SOURCE_DIR}/test_printers_array.c
+    ${CMAKE_CURRENT_SOURCE_DIR}/test_printers_object.c
+    ${CMAKE_CURRENT_SOURCE_DIR}/test_printers_pair.c
 )
 
 target_include_directories(json_tests PRIVATE
@@ -164,3 +170,16 @@ add_test(NAME test_parse_value_array_type COMMAND json_tests --run test_parse_va
 add_test(NAME test_parse_value_array_values COMMAND json_tests --run test_parse_value_array_values)
 add_test(NAME test_parse_value_booleans_null COMMAND json_tests --run test_parse_value_booleans_null)
 add_test(NAME test_parse_value_number_and_string COMMAND json_tests --run test_parse_value_number_and_string)
+
+add_test(NAME test_print_array_token COMMAND json_tests --run test_print_array_token)
+add_test(NAME test_print_array_with_array_element COMMAND json_tests --run test_print_array_with_array_element)
+add_test(NAME test_print_array_with_object_element COMMAND json_tests --run test_print_array_with_object_element)
+add_test(NAME test_print_false_token COMMAND json_tests --run test_print_false_token)
+add_test(NAME test_print_null_token COMMAND json_tests --run test_print_null_token)
+add_test(NAME test_print_number_token COMMAND json_tests --run test_print_number_token)
+add_test(NAME test_print_object_token COMMAND json_tests --run test_print_object_token)
+add_test(NAME test_print_object_with_pair_array_value COMMAND json_tests --run test_print_object_with_pair_array_value)
+add_test(NAME test_print_object_with_pair_object_value COMMAND json_tests --run test_print_object_with_pair_object_value)
+add_test(NAME test_print_pair_token COMMAND json_tests --run test_print_pair_token)
+add_test(NAME test_print_string_token COMMAND json_tests --run test_print_string_token)
+add_test(NAME test_print_true_token COMMAND json_tests --run test_print_true_token)

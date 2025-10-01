@@ -85,6 +85,18 @@ void test_parse_value_array_type(void **state);
 void test_parse_value_array_values(void **state);
 void test_parse_value_booleans_null(void **state);
 void test_parse_value_number_and_string(void **state);
+void test_print_array_token(void **state);
+void test_print_array_with_array_element(void **state);
+void test_print_array_with_object_element(void **state);
+void test_print_false_token(void **state);
+void test_print_null_token(void **state);
+void test_print_number_token(void **state);
+void test_print_object_token(void **state);
+void test_print_object_with_pair_array_value(void **state);
+void test_print_object_with_pair_object_value(void **state);
+void test_print_pair_token(void **state);
+void test_print_string_token(void **state);
+void test_print_true_token(void **state);
 
 typedef struct
 {
@@ -150,6 +162,18 @@ static test_entry_t all_tests[] = {
     {.name = "test_parse_value_array_values", .func = test_parse_value_array_values},
     {.name = "test_parse_value_booleans_null", .func = test_parse_value_booleans_null},
     {.name = "test_parse_value_number_and_string", .func = test_parse_value_number_and_string},
+    {.name = "test_print_array_token", .func = test_print_array_token},
+    {.name = "test_print_array_with_array_element", .func = test_print_array_with_array_element},
+    {.name = "test_print_array_with_object_element", .func = test_print_array_with_object_element},
+    {.name = "test_print_false_token", .func = test_print_false_token},
+    {.name = "test_print_null_token", .func = test_print_null_token},
+    {.name = "test_print_number_token", .func = test_print_number_token},
+    {.name = "test_print_object_token", .func = test_print_object_token},
+    {.name = "test_print_object_with_pair_array_value", .func = test_print_object_with_pair_array_value},
+    {.name = "test_print_object_with_pair_object_value", .func = test_print_object_with_pair_object_value},
+    {.name = "test_print_pair_token", .func = test_print_pair_token},
+    {.name = "test_print_string_token", .func = test_print_string_token},
+    {.name = "test_print_true_token", .func = test_print_true_token},
 };
 
 static int run_test_by_index(int idx)
@@ -269,6 +293,17 @@ int main(int argc, char **argv)
         cmocka_unit_test(test_parse_value_array_values),
         cmocka_unit_test(test_parse_value_booleans_null),
         cmocka_unit_test(test_parse_value_number_and_string),
+        cmocka_unit_test(test_print_array_token),
+        cmocka_unit_test(test_print_array_with_array_element),
+        cmocka_unit_test(test_print_array_with_object_element),
+        cmocka_unit_test(test_print_false_token),
+        cmocka_unit_test(test_print_null_token),
+        cmocka_unit_test(test_print_number_token),
+        cmocka_unit_test(test_print_object_token),
+        cmocka_unit_test(test_print_object_with_pair_array_value),
+        cmocka_unit_test(test_print_object_with_pair_object_value),
+        cmocka_unit_test(test_print_string_token),
+        cmocka_unit_test(test_print_true_token),
     };
 
     return cmocka_run_group_tests(tests, NULL, NULL);

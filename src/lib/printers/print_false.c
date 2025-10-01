@@ -1,5 +1,5 @@
-#include <stdio.h>
 #include <stdbool.h>
+#include <stdio.h>
 #include "../types/falsetoken.h"
 #include "../json_internal.h"
 
