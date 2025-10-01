@@ -1,8 +1,20 @@
 /* Portable duplication helper for internal use */
+#if defined(__GLIBC__)
+#define _GNU_SOURCE
+#endif
 #include <errno.h>
 #include <locale.h>
 #include <stdlib.h>
 #include <string.h>
+#include <stdio.h>
+#include <stdarg.h>
+
+#if defined(_WIN32) || defined(_MSC_VER)
+#include <errno.h>
+#endif
+#if defined(__GLIBC__)
+#include <stdlib.h>
+#endif
 
 #include "./json_internal.h"
 
@@ -145,5 +157,47 @@ double json_strtod(const char *nptr, char **endptr)
         setlocale(LC_NUMERIC, "");
     }
     return val;
+#endif
+}
+
+/* Safe snprintf wrapper: uses snprintf_s on Windows, asprintf on GNU/Linux, vsnprintf fallback otherwise. */
+int json_snprintf(char *buf, size_t bufsz, const char *fmt, ...)
+{
+    if (!buf || bufsz == 0 || !fmt)
+    {
+        abort();
+    }
+    va_list ap;
+    va_start(ap, fmt);
+#if defined(_WIN32) || defined(_MSC_VER)
+    int n = vsnprintf_s(buf, bufsz, _TRUNCATE, fmt, ap);
+    if (n < 0)
+        abort();
+    va_end(ap);
+    buf[bufsz - 1] = '\0';
+    return n;
+#elif defined(__GLIBC__)
+    char *tmp = NULL;
+    int   n   = vasprintf(&tmp, fmt, ap);
+    va_end(ap);
+    if (n < 0 || (size_t)n >= bufsz || !tmp)
+    {
+        if (tmp)
+            free(tmp);
+        abort();
+    }
+    strncpy(buf, tmp, bufsz - 1);
+    buf[bufsz - 1] = '\0';
+    free(tmp);
+    return n;
+#else
+    int n = vsnprintf(buf, bufsz, fmt, ap);
+    va_end(ap);
+    if (n < 0 || (size_t)n >= bufsz)
+    {
+        abort();
+    }
+    buf[bufsz - 1] = '\0';
+    return n;
 #endif
 }

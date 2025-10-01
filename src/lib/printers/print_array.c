@@ -2,10 +2,11 @@
 #include <string.h>
 #include "../types/arraytoken.h"
 #include "../types/token.h"
+#include "../json_internal.h"
 
 int print_array_token(const ArrayToken *tok, int indent, char *out, size_t outsz)
 {
-    int written = snprintf(out, outsz, "%*sArrayToken { skip: %d, elements: [\n", indent, "", tok->skip);
+    int written = json_snprintf(out, outsz, "%*sArrayToken { skip: %d, elements: [\n", indent, "", tok->skip);
     int total   = written > 0 ? written : 0;
     if (tok->elements && tok->elements->tokens)
     {
@@ -21,6 +22,6 @@ int print_array_token(const ArrayToken *tok, int indent, char *out, size_t outsz
         }
     }
     if (total < (int)outsz)
-        total += snprintf(out + total, outsz - total, "%*s]}\n", indent, "");
+        total += json_snprintf(out + total, outsz - total, "%*s]}\n", indent, "");
     return total;
 }

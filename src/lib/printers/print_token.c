@@ -16,12 +16,13 @@
 #include "./print_string.h"
 #include "./print_token.h"
 #include "./print_true.h"
+#include "../json_internal.h"
 
 int print_token(const Token *token, int indent, char *out, size_t outsz)
 {
     if (!token)
     {
-        return snprintf(out, outsz, "%*s(null token)\n", indent, "");
+        return json_snprintf(out, outsz, "%*s(null token)\n", indent, "");
     }
     int type = ((const int32_t *)token)[1]; // type is second int field
     switch (type)
@@ -43,6 +44,6 @@ int print_token(const Token *token, int indent, char *out, size_t outsz)
     case TOKEN_NULL:
         return print_null_token((const NullToken *)token, indent, out, outsz);
     default:
-        return snprintf(out, outsz, "%*s(unknown token type)\n", indent, "");
+        return json_snprintf(out, outsz, "%*s(unknown token type)\n", indent, "");
     }
 }

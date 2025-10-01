@@ -29,6 +29,9 @@ extern "C"
     /* Portable strnlen replacement exposed to the library. */
     size_t json_strnlen(const char *s, size_t maxlen);
 
+    /* Safe snprintf wrapper: aborts on error or truncation. */
+    int json_snprintf(char *buf, size_t bufsz, const char *fmt, ...);
+
 #ifdef __cplusplus
 }
 #endif

@@ -1,9 +1,10 @@
 #include <stdio.h>
 #include "../types/objecttoken.h"
+#include "../json_internal.h"
 
 int print_object_token(const ObjectToken *tok, int indent, char *out, size_t outsz)
 {
-    int written = snprintf(out, outsz, "%*sObjectToken { skip: %d, pairs: [\n", indent, "", tok->skip);
+    int written = json_snprintf(out, outsz, "%*sObjectToken { skip: %d, pairs: [\n", indent, "", tok->skip);
     int total   = written > 0 ? written : 0;
     if (tok->members && tok->members->pairs)
     {
@@ -18,6 +19,6 @@ int print_object_token(const ObjectToken *tok, int indent, char *out, size_t out
         }
     }
     if (total < (int)outsz)
-        total += snprintf(out + total, outsz - total, "%*s]}\n", indent, "");
+        total += json_snprintf(out + total, outsz - total, "%*s]}\n", indent, "");
     return total;
 }

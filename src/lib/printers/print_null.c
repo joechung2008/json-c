@@ -1,7 +1,8 @@
 #include <stdio.h>
 #include "../types/nulltoken.h"
+#include "../json_internal.h"
 
 int print_null_token(const NullToken *tok, int indent, char *out, size_t outsz)
 {
-    return snprintf(out, outsz, "%*sNullToken { skip: %d }\n", indent, "", tok->skip);
+    return json_snprintf(out, outsz, "%*sNullToken { skip: %d }\n", indent, "", tok->skip);
 }
