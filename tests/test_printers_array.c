@@ -13,6 +13,7 @@ void test_print_array_token(void **state)
     char       buf[128];
     int        n = print_array_token(&tok, 2, buf, sizeof(buf), false);
     assert(strstr(buf, "ArrayToken") && n > 0);
+    (void)n;
     print_array_token(&tok, 0, buf, sizeof(buf), true);
     assert(strncmp(buf, "ArrayToken", 10) == 0);
 }
@@ -26,6 +27,7 @@ void test_print_array_with_array_element(void **state)
     char        buf[1024];
     int         n = print_array_token(tok, 0, buf, sizeof(buf), false);
     assert(n > 0 && strstr(buf, "ArrayToken") != NULL);
+    (void)n;
     token_free(t);
 }
 
@@ -38,5 +40,6 @@ void test_print_array_with_object_element(void **state)
     char        buf[1024];
     int         n = print_array_token(tok, 0, buf, sizeof(buf), false);
     assert(n > 0 && strstr(buf, "ArrayToken") != NULL && strstr(buf, "ObjectToken") != NULL);
+    (void)n;
     token_free(t);
 }

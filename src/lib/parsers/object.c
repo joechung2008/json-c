@@ -6,6 +6,8 @@
 #include "./pair.h"
 #include "../token_free.h"
 
+static PairTokens *append_pair(PairTokens *, PairToken *);
+
 ObjectToken *json_parse_object(const char *s)
 {
     enum

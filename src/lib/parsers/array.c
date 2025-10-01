@@ -9,6 +9,9 @@
 
 // Token header contract: every token begins with two ints (skip, type).
 // Use TOKEN_SKIP(t) and TOKEN_TYPE(t) from src/lib/token_helpers.h to access these fields.
+
+static Tokens *append_token(Tokens *, Token *);
+
 ArrayToken *json_parse_array(const char *s)
 {
     enum

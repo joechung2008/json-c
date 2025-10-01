@@ -13,6 +13,7 @@ void test_print_object_token(void **state)
     char        buf[128];
     int         n = print_object_token(&tok, 2, buf, sizeof(buf), false);
     assert(strstr(buf, "ObjectToken") && n > 0);
+    (void)n;
     print_object_token(&tok, 0, buf, sizeof(buf), true);
     assert(strncmp(buf, "ObjectToken", 11) == 0);
 }
@@ -26,6 +27,7 @@ void test_print_object_with_pair_array_value(void **state)
     char         buf[1024];
     int          n = print_object_token(tok, 0, buf, sizeof(buf), false);
     assert(n > 0 && strstr(buf, "ObjectToken") != NULL && strstr(buf, "ArrayToken") != NULL);
+    (void)n;
     token_free(t);
 }
 
@@ -38,5 +40,6 @@ void test_print_object_with_pair_object_value(void **state)
     char         buf[1024];
     int          n = print_object_token(tok, 0, buf, sizeof(buf), false);
     assert(n > 0 && strstr(buf, "ObjectToken") != NULL);
+    (void)n;
     token_free(t);
 }

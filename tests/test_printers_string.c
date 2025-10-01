@@ -10,6 +10,7 @@ void test_print_string_token(void **state)
     char        buf[128];
     int         n = print_string_token(&tok, 2, buf, sizeof(buf), false);
     assert(strstr(buf, "StringToken") && n > 0);
+    (void)n;
     print_string_token(&tok, 0, buf, sizeof(buf), true);
     assert(strncmp(buf, "StringToken", 11) == 0);
 }

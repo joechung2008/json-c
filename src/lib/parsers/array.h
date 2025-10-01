@@ -4,5 +4,4 @@
 
 #include "../types.h"
 
-ArrayToken    *json_parse_array(const char *s);
-static Tokens *append_token(Tokens *, Token *);
+ArrayToken *json_parse_array(const char *s);
