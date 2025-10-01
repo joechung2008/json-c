@@ -52,5 +52,4 @@ jobs:
           # Helpful ASan options when matrix.asan is true
           ASAN_OPTIONS: "detect_leaks=1:abort_on_error=1"
         run: |
-          cd build
-          ctest --output-on-failure -j 2
+          ./bin/run-tests.sh

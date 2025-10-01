@@ -7,4 +7,4 @@ if [ ! -d "$BUILD_DIR" ]; then
   echo "Build directory not found; running build first..."
   "$ROOT_DIR/bin/build.sh"
 fi
-ctest --test-dir "$BUILD_DIR" --output-on-failure
+"$BUILD_DIR/tests/json_tests" --full-stats --verbose

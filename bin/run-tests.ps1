@@ -26,22 +26,10 @@ if (Test-Path $TestsOut) {
     $env:PATH = "$TestsOut;$env:PATH"
 }
 
-# Add cmocka dep output to PATH (FetchContent default location)
-$CmockaOut = Join-Path $BuildDir "_deps\cmocka-build\src\$Configuration"
-if (Test-Path $CmockaOut) {
-    $env:PATH = "$CmockaOut;$env:PATH"
-} else {
-    # also try the src root (some generator layouts put the DLLs here)
-    $CmockaRoot = Join-Path $BuildDir '_deps\cmocka-build\src'
-    if (Test-Path $CmockaRoot) {
-        $env:PATH = "$CmockaRoot;$env:PATH"
-    }
-}
-
 # Prefer ctest when available
 if (Get-Command ctest -ErrorAction SilentlyContinue) {
     # For multi-config generators (Visual Studio) ctest needs the configuration (-C)
-    ctest --test-dir $BuildDir -C $Configuration --output-on-failure
+    & "$TestsOut\json_tests.exe" --full-stats --verbose
 } else {
     Write-Host "ctest not found; running test executables directly from $TestsOut"
     if (Test-Path $TestsOut) {

@@ -5,183 +5,174 @@
 #include <stdint.h>
 #include <stdlib.h>
 #include <string.h>
-#include <cmocka.h>
+#include <criterion/criterion.h>
 
 /* Test parsing of a simple pair inside an object */
-void test_parse_pair_simple(void **state)
+Test(pair, test_parse_pair_simple)
 {
-    (void)state;
     const char *input = "{\"a\": 1}";
     void       *v     = json_parse(input);
-    assert_non_null(v);
+    cr_assert_not_null(v);
     const char *txt = json_text((const json_value_t *)v);
-    assert_non_null(txt);
+    cr_assert_not_null(txt);
     /* we expect the textual representation to contain the key "a" */
-    assert_non_null(strstr(txt, "\"a\""));
+    cr_assert_not_null(strstr(txt, "\"a\""));
     json_free((json_value_t *)v);
 }
 
-void test_parse_pair_key_and_value_string(void **state)
+Test(pair, test_parse_pair_key_and_value_string)
 {
-    (void)state;
     json_value_t *v = json_parse("{\"name\": \"John\"}");
-    assert_non_null(v);
+    cr_assert_not_null(v);
 
     const char *k = json_object_key(v, 0);
-    assert_string_equal(k, "name");
+    cr_assert_str_eq(k, "name");
 
     json_value_t *val = json_object_value(v, 0);
-    assert_non_null(val);
+    cr_assert_not_null(val);
     const char *s = json_value_get_string(val);
-    assert_string_equal(s, "John");
+    cr_assert_str_eq(s, "John");
     json_value_free_wrapper(val);
 
     json_free(v);
 }
 
-void test_parse_pair_key_and_value_number(void **state)
+Test(pair, test_parse_pair_key_and_value_number)
 {
-    (void)state;
     json_value_t *v = json_parse("{\"age\": 42}");
-    assert_non_null(v);
+    cr_assert_not_null(v);
 
     const char *k = json_object_key(v, 0);
-    assert_string_equal(k, "age");
+    cr_assert_str_eq(k, "age");
 
     json_value_t *val = json_object_value(v, 0);
-    assert_non_null(val);
+    cr_assert_not_null(val);
     double d = 0;
-    assert_true(json_value_get_number(val, &d));
-    assert_true(d == 42.0);
+    cr_assert(json_value_get_number(val, &d));
+    cr_assert(d == 42.0);
     json_value_free_wrapper(val);
 
     json_free(v);
 }
 
-void test_parse_pair_key_and_value_bool(void **state)
+Test(pair, test_parse_pair_key_and_value_bool)
 {
-    (void)state;
     json_value_t *v = json_parse("{\"active\": true}");
-    assert_non_null(v);
+    cr_assert_not_null(v);
 
     const char *k = json_object_key(v, 0);
-    assert_string_equal(k, "active");
+    cr_assert_str_eq(k, "active");
 
     json_value_t *val = json_object_value(v, 0);
-    assert_non_null(val);
+    cr_assert_not_null(val);
     bool b = false;
-    assert_true(json_value_get_bool(val, &b));
-    assert_true(b);
+    cr_assert(json_value_get_bool(val, &b));
+    cr_assert(b);
     json_value_free_wrapper(val);
 
     json_free(v);
 }
 
-void test_parse_pair_key_and_value_null(void **state)
+Test(pair, test_parse_pair_key_and_value_null)
 {
-    (void)state;
     json_value_t *v = json_parse("{\"data\": null}");
-    assert_non_null(v);
+    cr_assert_not_null(v);
 
     const char *k = json_object_key(v, 0);
-    assert_string_equal(k, "data");
+    cr_assert_str_eq(k, "data");
 
     json_value_t *val = json_object_value(v, 0);
-    assert_non_null(val);
-    assert_int_equal(json_value_type(val), JSON_NULL);
+    cr_assert_not_null(val);
+    cr_assert_eq(json_value_type(val), JSON_NULL);
     json_value_free_wrapper(val);
 
     json_free(v);
 }
 
-void test_parse_pair_value_array_and_object_types(void **state)
+Test(pair, test_parse_pair_value_array_and_object_types)
 {
-    (void)state;
     json_value_t *v = json_parse("{\"items\": [1,2,3]}");
-    assert_non_null(v);
+    cr_assert_not_null(v);
     const char *k = json_object_key(v, 0);
-    assert_string_equal(k, "items");
+    cr_assert_str_eq(k, "items");
     json_value_t *val = json_object_value(v, 0);
-    assert_non_null(val);
-    assert_int_equal(json_value_type(val), JSON_ARRAY);
+    cr_assert_not_null(val);
+    cr_assert_eq(json_value_type(val), JSON_ARRAY);
     json_value_free_wrapper(val);
     json_free(v);
 
     v = json_parse("{\"nested\": {\"inner\": \"value\"}}");
-    assert_non_null(v);
+    cr_assert_not_null(v);
     k = json_object_key(v, 0);
-    assert_string_equal(k, "nested");
+    cr_assert_str_eq(k, "nested");
     val = json_object_value(v, 0);
-    assert_non_null(val);
-    assert_int_equal(json_value_type(val), JSON_OBJECT);
+    cr_assert_not_null(val);
+    cr_assert_eq(json_value_type(val), JSON_OBJECT);
     json_value_free_wrapper(val);
     json_free(v);
 }
 
-void test_parse_pair_whitespace_handling(void **state)
+Test(pair, test_parse_pair_whitespace_handling)
 {
-    (void)state;
     json_value_t *v = json_parse("{\"key\"  :  \"value\"}");
-    assert_non_null(v);
+    cr_assert_not_null(v);
     const char *k = json_object_key(v, 0);
-    assert_string_equal(k, "key");
+    cr_assert_str_eq(k, "key");
     json_value_t *val = json_object_value(v, 0);
-    assert_non_null(val);
+    cr_assert_not_null(val);
     const char *s = json_value_get_string(val);
-    assert_string_equal(s, "value");
+    cr_assert_str_eq(s, "value");
     json_value_free_wrapper(val);
     json_free(v);
 
     v = json_parse("{  \"key\": \"value\"  }");
-    assert_non_null(v);
+    cr_assert_not_null(v);
     k = json_object_key(v, 0);
-    assert_string_equal(k, "key");
+    cr_assert_str_eq(k, "key");
     val = json_object_value(v, 0);
-    assert_non_null(val);
+    cr_assert_not_null(val);
     s = json_value_get_string(val);
-    assert_string_equal(s, "value");
+    cr_assert_str_eq(s, "value");
     json_value_free_wrapper(val);
     json_free(v);
 }
 
-void test_parse_pair_errors(void **state)
+Test(pair, test_parse_pair_errors)
 {
-    (void)state;
     json_value_t *v;
 
     v = json_parse("{\"key\" \"value\"}");
-    assert_null(v);
+    cr_assert_null(v);
 
     v = json_parse("{\"key\"; \"value\"}");
-    assert_null(v);
+    cr_assert_null(v);
 
     v = json_parse("{key\": \"value\"}");
-    assert_null(v);
+    cr_assert_null(v);
 
     v = json_parse("{\"key\": invalid}");
-    assert_null(v);
+    cr_assert_null(v);
 }
 
-void test_parse_multiple_pairs_and_commas(void **state)
+Test(pair, test_parse_multiple_pairs_and_commas)
 {
-    (void)state;
     json_value_t *v = json_parse("{\"key1\": \"value1\", \"key2\": \"value2\"}");
-    assert_non_null(v);
+    cr_assert_not_null(v);
 
     const char *k0 = json_object_key(v, 0);
-    assert_string_equal(k0, "key1");
+    cr_assert_str_eq(k0, "key1");
     json_value_t *val0 = json_object_value(v, 0);
-    assert_non_null(val0);
+    cr_assert_not_null(val0);
     const char *s0 = json_value_get_string(val0);
-    assert_string_equal(s0, "value1");
+    cr_assert_str_eq(s0, "value1");
     json_value_free_wrapper(val0);
 
     const char *k1 = json_object_key(v, 1);
-    assert_string_equal(k1, "key2");
+    cr_assert_str_eq(k1, "key2");
     json_value_t *val1 = json_object_value(v, 1);
-    assert_non_null(val1);
+    cr_assert_not_null(val1);
     const char *s1 = json_value_get_string(val1);
-    assert_string_equal(s1, "value2");
+    cr_assert_str_eq(s1, "value2");
     json_value_free_wrapper(val1);
 
     json_free(v);

@@ -63,7 +63,7 @@ Run the CLI (from the project root):
 ./bin/run-cli.ps1 -Configuration Release
 ```
 
-Run unit tests (see `TESTS.md` for more details):
+Run unit tests using Criterion (see `TESTS.md` for more details):
 
 ```bash
 # POSIX / bash
@@ -125,6 +125,6 @@ More information:
 
 ## Notes
 
-- The test setup fetches `cmocka` automatically if it's not available on the system (FetchContent pinned to cmocka 1.1.5). If you prefer using a system-installed cmocka, install it and rerun CMake.
+- The test setup fetches `Criterion` automatically if it's not available on the system (FetchContent pinned to Criterion v2.4.2). If you prefer using a system-installed Criterion, install it and rerun CMake.
 
 - If you want editor tooling (clangd, clang-tidy) to see compile flags, generate `compile_commands.json` by configuring CMake with `-DCMAKE_EXPORT_COMPILE_COMMANDS=ON`. The file will be created in the `build/` directory. See `TESTS.md` for a symlink example.
