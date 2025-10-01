@@ -10,10 +10,10 @@
 void test_parse_empty_object(void **state)
 {
     (void)state;
-    const char   *txt = "{}";
-    json_value_t *v   = json_parse(txt);
+    json_value_t *v = json_parse("{}");
     assert_non_null(v);
-    assert_string_equal(json_text(v), txt);
+    assert_int_equal(json_value_type(v), JSON_OBJECT);
+    assert_int_equal((int)json_object_size(v), 0);
     json_free(v);
 }
 

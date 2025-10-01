@@ -13,7 +13,17 @@ void test_parse_simple_value(void **state)
     const char   *txt = "{\"ok\":true}";
     json_value_t *v   = json_parse(txt);
     assert_non_null(v);
-    assert_string_equal(json_text(v), txt);
+    assert_int_equal(json_value_type(v), JSON_OBJECT);
+    assert_int_equal((int)json_object_size(v), 1);
+    const char *k = json_object_key(v, 0);
+    assert_string_equal(k, "ok");
+    json_value_t *val = json_object_value(v, 0);
+    assert_non_null(val);
+    assert_int_equal(json_value_type(val), JSON_TRUE);
+    bool b = false;
+    assert_true(json_value_get_bool(val, &b));
+    assert_true(b == true);
+    json_value_free_wrapper(val);
     json_free(v);
 }
 

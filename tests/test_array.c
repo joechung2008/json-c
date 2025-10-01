@@ -13,7 +13,25 @@ void test_parse_simple_array(void **state)
     const char   *txt = "[1, 2, 3]";
     json_value_t *v   = json_parse(txt);
     assert_non_null(v);
-    assert_string_equal(json_text(v), txt);
+    assert_int_equal(json_value_type(v), JSON_ARRAY);
+    assert_int_equal((int)json_array_length(v), 3);
+
+    double d;
+    json_value_t *e0 = json_array_get(v, 0);
+    assert_true(json_value_get_number(e0, &d));
+    assert_true(d == 1.0);
+    json_value_free_wrapper(e0);
+
+    json_value_t *e1 = json_array_get(v, 1);
+    assert_true(json_value_get_number(e1, &d));
+    assert_true(d == 2.0);
+    json_value_free_wrapper(e1);
+
+    json_value_t *e2 = json_array_get(v, 2);
+    assert_true(json_value_get_number(e2, &d));
+    assert_true(d == 3.0);
+    json_value_free_wrapper(e2);
+
     json_free(v);
 }
 

@@ -13,13 +13,13 @@ void test_parse_number_simple(void **state)
 {
     (void)state;
     const char *input = "12345";
-    void       *v     = json_parse(input);
+    json_value_t *v = json_parse(input);
     assert_non_null(v);
-    /* simple smoke: json_text should return the original text or similar */
-    const char *txt = json_text((const json_value_t *)v);
-    assert_non_null(txt);
-    assert_string_equal(txt, input);
-    json_free((json_value_t *)v);
+    assert_int_equal(json_value_type(v), JSON_NUMBER);
+    double d;
+    assert_true(json_value_get_number(v, &d));
+    assert_true(d == 12345.0);
+    json_free(v);
 }
 
 void test_parse_number_positive_and_negative(void **state)
