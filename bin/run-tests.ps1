@@ -26,11 +26,6 @@ if (Test-Path $TestsOut) {
     $env:PATH = "$TestsOut;$env:PATH"
 }
 
-# Also add build/$Configuration to PATH for test executables
-if (Test-Path $ConfigOut) {
-    $env:PATH = "$ConfigOut;$env:PATH"
-}
-
 # Add cmocka dep output to PATH (FetchContent default location)
 $CmockaOut = Join-Path $BuildDir "_deps\cmocka-build\src\$Configuration"
 if (Test-Path $CmockaOut) {
@@ -48,23 +43,14 @@ if (Get-Command ctest -ErrorAction SilentlyContinue) {
     # For multi-config generators (Visual Studio) ctest needs the configuration (-C)
     ctest --test-dir $BuildDir -C $Configuration --output-on-failure
 } else {
-    # Try both build/tests/$Configuration and build/$Configuration for test executables
-    $TestDirs = @($TestsOut, $ConfigOut)
-    $FoundTests = $false
-    foreach ($dir in $TestDirs) {
-        if (Test-Path $dir) {
-            $TestExes = Get-ChildItem -Path $dir -Filter *.exe -File
-            if ($TestExes.Count -gt 0) {
-                $FoundTests = $true
-                foreach ($test in $TestExes) {
-                    Write-Host "Running test: $($test.FullName)"
-                    & $test.FullName
-                }
-            }
+    Write-Host "ctest not found; running test executables directly from $TestsOut"
+    if (Test-Path $TestsOut) {
+        Get-ChildItem -Path $TestsOut -Filter *.exe -File | ForEach-Object {
+            Write-Host "Running test: $($_.FullName)"
+            & $_.FullName
         }
-    }
-    if (-not $FoundTests) {
-        Write-Host "No test executables found in $TestsOut or $ConfigOut"
+    } else {
+        Write-Host "No tests found in $TestsOut"
         exit 1
     }
 }
