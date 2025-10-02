@@ -53,6 +53,7 @@
     {
       "label": "CMake: Run Tests (Debug)",
       "type": "shell",
+      "dependsOn": ["CMake: Build (Debug)"],
       "linux": {
         "command": "ctest --test-dir build --output-on-failure"
       },
@@ -67,6 +68,7 @@
     {
       "label": "CMake: Run Tests (Release)",
       "type": "shell",
+      "dependsOn": ["CMake: Build (Release)"],
       "linux": {
         "command": "ctest --test-dir build --output-on-failure"
       },
