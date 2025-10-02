@@ -1,43 +1,61 @@
 <#
-bin/lint.ps1 — run clang-tidy over C sources and headers
-Usage: bin\lint.ps1
+bin/lint.ps1 — run MSVC static analysis over C sources
+Usage: bin\lint.ps1 [-Build <dir>]
 #>
 
-function Abort($msg) {
-    Write-Error $msg;
+param(
+    [string]$Build = "build"
+)
+
+$BUILD_DIR = $Build
+
+if ($args.Count -ne 0) {
+    Write-Error "lint.ps1 takes at most one argument: -Build <dir>. If you want to run MSVC static analysis manually, call MSBuild directly."
     exit 2
 }
 
-if (-not (Get-Command clang-tidy -ErrorAction SilentlyContinue)) {
-    Abort "clang-tidy not found in PATH"
+# Find MSBuild using vswhere
+$vswherePath = "C:\Program Files (x86)\Microsoft Visual Studio\Installer\vswhere.exe"
+if (-not (Test-Path $vswherePath)) {
+    Write-Error "vswhere not found. Ensure Visual Studio 2022 is installed."
+    exit 2
 }
 
-$compilerArgsBase = @('--', '-I' + (Join-Path (Get-Location) 'include'), '-std=c17')
-
-$files = Get-ChildItem -Path src, include -Recurse -File -Include *.c, *.h -ErrorAction SilentlyContinue | ForEach-Object { $_.FullName }
-if ($files.Count -eq 0) {
-    Write-Output "No source files found under src/ or include/";
-    exit 0
+$msbuildPath = & $vswherePath -latest -products * -requires Microsoft.Component.MSBuild -find "MSBuild\**\Bin\MSBuild.exe" | Select-Object -First 1
+if (-not $msbuildPath -or -not (Test-Path $msbuildPath)) {
+    Write-Error "MSBuild executable not found via vswhere. Ensure Visual Studio 2022 or Build Tools are installed."
+    exit 2
 }
 
-foreach ($f in $files) {
-    # Use a minimal, hard-coded clang-tidy argument set
-    $clangArgs = @('-header-filter=.*')
+# Find the main code project files to analyze
+$vcxprojFiles = Get-ChildItem -Path $BUILD_DIR -Recurse -Filter *.vcxproj | Where-Object {
+    $_.FullName -notlike "*_deps*" -and
+    $_.Name -in @("json_c.vcxproj", "json-cli.vcxproj")
+}
 
-    # Build argument array and capture output so we can filter noisy advice lines
-    $args = @($f) + $clangArgs + $compilerArgsBase
-    $output = & clang-tidy @args 2>&1
-    $rc = $LASTEXITCODE
+if ($vcxprojFiles.Count -eq 0) {
+    Write-Error "No project files found in $BUILD_DIR. Run: cmake -S . -B $BUILD_DIR"
+    exit 2
+}
 
-    # Filter out clang-tidy advice about header/system-headers and the final "N warnings generated." lines
-    $filtered = $output | Where-Object {
-        ($_ -notmatch "Use -header-filter") -and
-        ($_ -notmatch "Use -system-headers") -and
-        ($_ -notmatch "^\s*\d+ warnings generated\.") -and
-        ($_ -notmatch "^\s*Suppressed\s+\d+\s+warnings")
+# Run MSBuild with static analysis on each project
+foreach ($vcxproj in $vcxprojFiles) {
+    Write-Host "Analyzing $($vcxproj.Name)..."
+
+    $msbuildArgs = @(
+        $vcxproj.FullName,
+        "/t:Build",
+        "/p:Configuration=Debug",
+        "/p:EnableStaticAnalysis=true",
+        "/verbosity:minimal"
+    )
+
+    & $msbuildPath $msbuildArgs
+
+    if ($LASTEXITCODE -ne 0) {
+        Write-Error "MSVC static analysis failed for $($vcxproj.Name)."
+        exit $LASTEXITCODE
     }
-
-    $filtered | ForEach-Object { Write-Output $_ }
-
-    if ($rc -ne 0) { exit $rc }
 }
+
+Write-Host "MSVC static analysis completed successfully."

@@ -22,5 +22,5 @@
 - Use CMake for building the project.
 - See README.md "Build and run" section for details.
 - Use bin/format.sh (bash) or bin/format.ps1 (PowerShell) for formatting with clang-format.
-- Use bin/lint.sh (bash) or bin/lint.ps1 (PowerShell) for linting with clang-tidy.
+- Use bin/lint.sh (bash) for linting with clang-tidy or bin/lint.ps1 (PowerShell) for MSVC static analysis.
 - Prefer bin scripts over direct tool invocation for platform-specific setup.

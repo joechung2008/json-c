@@ -71,7 +71,7 @@ ctest --test-dir build -C Debug --output-on-failure
 ./out/json_tests
 ```
 
-## Format
+## Formatting with clang-format
 
 Format the code using [`clang-format`](https://clang.llvm.org/docs/ClangFormat.html):
 
@@ -85,19 +85,21 @@ Format the code using [`clang-format`](https://clang.llvm.org/docs/ClangFormat.h
 ./bin/format.ps1
 ```
 
-## Linting with clang-tidy
+## Linting with clang-tidy and MSVC static analysis
 
-We recommend using `clang-tidy` for static analysis and style checks.
+We recommend using static analysis tools for code quality checks.
 
 ```bash
-# POSIX / bash
+# POSIX / bash (clang-tidy)
 ./bin/lint.sh
+```
 
-# PowerShell (Windows)
+```powershell
+# PowerShell (Windows, MSVC static analysis)
 ./bin/lint.ps1
 ```
 
-The lint scripts automatically generate `compile_commands.json` if needed. For manual usage:
+For clang-tidy manual usage:
 
 ```bash
 # Generate compilation database
