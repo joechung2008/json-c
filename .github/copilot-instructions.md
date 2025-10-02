@@ -1,29 +1,26 @@
-# Guidelines for AI coding assistants like GitHub Copilot
+# Guidelines for AI Coding Assistants
 
-## Instructions for GPT-5-mini
+## General Instructions
 
-- **Be concise and direct.** Avoid any preambles, acknowledgments, or conversational pleasantries.
-- **Provide only the answer.** Do not include any explanations unless specifically asked.
-- **Limit responses to the core information** requested by the user.
-- **Never ask follow-up questions** or offer further assistance.
+- Be concise and direct. Avoid preambles, acknowledgments, or conversational pleasantries.
+- Provide only the answer. Do not include explanations unless specifically asked.
+- Limit responses to the core information requested.
+- Never ask follow-up questions or offer further assistance.
 
 ## Testing
 
-- Do not combine multiple cases into one.
-  - Each test should focus on a single aspect or behavior.
+- Do not combine multiple cases into one. Each test should focus on a single aspect or behavior.
 - Ensure tests cover edge cases and potential failure points.
-- JSON tests should be grouped by JSON type:
-  - Arrays
-  - Numbers
-  - Objects
-  - Pairs (key/value pairs within objects)
-  - Strings
-  - Values (null, false, true)
+- JSON tests should be grouped by JSON type: Arrays, Numbers, Objects, Pairs, Strings, Values.
 - Run all tests before committing code to ensure nothing is broken.
-- Use a consistent testing framework and follow best practices for writing tests.
-- Use descriptive names for test cases to clearly indicate their purpose.
+- Use cmocka for unit testing and follow best practices.
+- Use descriptive names for test cases.
 - Write tests for all new features and bug fixes.
 
-## Running and building in this repo
+## Building and Running
 
-See the project's `README.md` "Build and run" section for the canonical list of `bin/` helper scripts and usage examples (PowerShell and bash). The `bin` scripts handle configuration, platform detection, and DLL path setup on Windows so prefer them over invoking build/test tools directly.
+- Use CMake for building the project.
+- See README.md "Build and run" section for details.
+- Use bin/format.sh (bash) or bin/format.ps1 (PowerShell) for formatting with clang-format.
+- Use bin/lint.sh (bash) or bin/lint.ps1 (PowerShell) for linting with clang-tidy.
+- Prefer bin scripts over direct tool invocation for platform-specific setup.
