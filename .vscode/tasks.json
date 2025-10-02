@@ -2,15 +2,15 @@
   "version": "2.0.0",
   "tasks": [
     {
-      "label": "CMake: Build",
+      "label": "CMake: Build (Debug)",
       "type": "shell",
       "linux": {
-        "command": "bin/build.sh",
-        "args": ["-t", "Debug"]
+        "command": "cmake -S . -B build -DCMAKE_BUILD_TYPE=Debug && cmake --build build",
+        "problemMatcher": []
       },
       "windows": {
-        "command": "bin/build.ps1",
-        "args": ["-Configuration", "Debug"]
+        "command": "cmake -S . -B build && cmake --build build --config Debug",
+        "problemMatcher": ["$msCompile"]
       },
       "group": {
         "kind": "build",
@@ -18,43 +18,46 @@
       },
       "presentation": {
         "reveal": "always"
-      },
-      "problemMatcher": ["$msCompile"]
+      }
     },
     {
       "label": "CMake: Build (Release)",
       "type": "shell",
       "linux": {
-        "command": "bin/build.sh",
-        "args": ["-t", "Release"]
+        "command": "cmake -S . -B build -DCMAKE_BUILD_TYPE=Release && cmake --build build",
+        "problemMatcher": []
       },
       "windows": {
-        "command": "bin/build.ps1",
-        "args": ["-Configuration", "Release"]
+        "command": "cmake -S . -B build && cmake --build build --config Release",
+        "problemMatcher": ["$msCompile"]
       },
       "presentation": {
         "reveal": "always"
-      },
-      "problemMatcher": ["$msCompile"]
+      }
     },
     {
       "label": "CMake: Clean",
       "type": "shell",
-      "command": "cmake",
-      "args": ["--build", "build", "--target", "clean"],
+      "linux": {
+        "command": "cmake",
+        "args": ["--build", "build", "--target", "clean"]
+      },
+      "windows": {
+        "command": "cmake --build build --target clean --config Debug && cmake --build build --target clean --config Release"
+      },
       "presentation": {
         "reveal": "always"
       },
       "problemMatcher": []
     },
     {
-      "label": "CMake: Run Tests",
+      "label": "CMake: Run Tests (Debug)",
       "type": "shell",
       "linux": {
-        "command": "bin/run-tests.sh"
+        "command": "ctest --test-dir build --output-on-failure"
       },
       "windows": {
-        "command": "bin/run-tests.ps1"
+        "command": "ctest --test-dir build -C Debug --output-on-failure"
       },
       "presentation": {
         "reveal": "always"
@@ -62,11 +65,13 @@
       "problemMatcher": []
     },
     {
-      "label": "CMake: Run Tests (Windows)",
+      "label": "CMake: Run Tests (Release)",
       "type": "shell",
-      "command": "echo This task is Windows-only",
+      "linux": {
+        "command": "ctest --test-dir build --output-on-failure"
+      },
       "windows": {
-        "command": "bin/run-tests.ps1"
+        "command": "ctest --test-dir build -C Release --output-on-failure"
       },
       "presentation": {
         "reveal": "always"
