@@ -99,6 +99,7 @@ int main(int argc, char **argv)
     if (out)
     {
         fputs(out, stdout);
+        fputs("\n", stdout);
     }
     else
     {
