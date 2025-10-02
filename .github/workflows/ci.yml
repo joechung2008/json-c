@@ -32,13 +32,11 @@ jobs:
           if [ "${{ matrix.asan }}" = "true" ]; then
             echo "Configuring ASan build"
             cmake -S . -B build \
-              -DCMAKE_BUILD_TYPE=Debug \
               -DCMAKE_C_FLAGS="-fsanitize=address -fno-omit-frame-pointer -g" \
-              -DCMAKE_EXE_LINKER_FLAGS="-fsanitize=address" \
-              -DCMAKE_SHARED_LINKER_FLAGS="-fsanitize=address"
+              -DCMAKE_EXE_LINKER_FLAGS="-fsanitize=address"
           else
             echo "Configuring normal build"
-            cmake -S . -B build -DCMAKE_BUILD_TYPE=RelWithDebInfo
+            cmake -S . -B build
           fi
 
       - name: Build

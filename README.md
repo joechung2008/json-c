@@ -20,12 +20,10 @@ sudo apt update
 sudo apt install build-essential cmake
 ```
 
-### Win32 (Windows)
+### Windows
 
 - [Visual Studio 2022 Build Tools](https://visualstudio.microsoft.com/downloads/#build-tools-for-visual-studio-2022) (includes MSVC, CMake, Ninja)
-- PowerShell
-
-The provided PowerShell scripts will attempt to detect and use Visual Studio 2022 automatically.
+- PowerShell (for format/lint scripts)
 
 ## Reference
 
@@ -33,47 +31,44 @@ The provided PowerShell scripts will attempt to detect and use Visual Studio 202
 
 ## Build and run
 
-This project uses CMake. The instructions below use an out-of-source build directory named `build`.
+This project uses CMake with fixed output directories (`out/` for binaries, `obj/` for archives).
 
-Configure the build and build the code:
-
-```bash
-# POSIX / bash
-./bin/build.sh
-```
-
-```powershell
-# PowerShell (Windows)
-./bin/build.ps1
-./bin/build.ps1 -Configuration Release
-```
-
-Note: On Windows `bin/build.ps1` prefers the [Visual Studio 2022 Build Tools](https://visualstudio.microsoft.com/downloads/#build-tools-for-visual-studio-2022) (CMake generator "Visual Studio 17 2022"). The script will try to detect VS2022 via `vswhere` and will warn if it's not found.
-
-Run the CLI (from the project root):
+### Build
 
 ```bash
-# POSIX / bash
-./bin/run-cli.sh
+# Configure and build (default/unoptimized)
+cmake -S . -B build
+cmake --build build
+
+# Release build (optimized)
+cmake -S . -B build -DCMAKE_BUILD_TYPE=Release
+cmake --build build
+
+# Debug build (with debug symbols)
+cmake -S . -B build -DCMAKE_BUILD_TYPE=Debug
+cmake --build build
 ```
 
-```powershell
-# PowerShell (Windows)
-./bin/run-cli.ps1
-./bin/run-cli.ps1 -Configuration Release
-```
-
-Run unit tests (see `TESTS.md` for more details):
+### Run CLI
 
 ```bash
-# POSIX / bash
-./bin/run-tests.sh
+./out/json-cli
+
+# Windows
+.\out\json-cli.exe
 ```
 
-```powershell
-# PowerShell (Windows)
-./bin/run-tests.ps1
-./bin/run-tests.ps1 -Configuration Release
+### Run tests
+
+```bash
+# From project root
+ctest --test-dir build --output-on-failure
+
+# On Windows with Visual Studio generator, specify configuration
+ctest --test-dir build -C Debug --output-on-failure
+
+# Or run the test executable directly
+./out/json_tests
 ```
 
 ## Format
@@ -92,39 +87,29 @@ Format the code using [`clang-format`](https://clang.llvm.org/docs/ClangFormat.h
 
 ## Linting with clang-tidy
 
-We recommend using `clang-tidy` for static analysis and style checks. `clang-tidy` uses the C/C++ compile flags from a compilation database (`compile_commands.json`) to perform accurate checks.
-
-Quick start:
+We recommend using `clang-tidy` for static analysis and style checks.
 
 ```bash
-# Generate compilation database (required for bin/lint.sh)
-cmake -S . -B build -DCMAKE_EXPORT_COMPILE_COMMANDS=ON
-```
-
-```bash
-# Run clang-tidy across C sources (uses .clang-tidy at repo root if present)
-clang-tidy -p build $(find src -name '*.c')
-```
-
-```bash
-# POSIX / bash (requires build/compile_commands.json)
+# POSIX / bash
 ./bin/lint.sh
-```
 
-```powershell
 # PowerShell (Windows)
 ./bin/lint.ps1
 ```
 
-See `TESTS.md` for more information on interpreting analyzer output.
+The lint scripts automatically generate `compile_commands.json` if needed. For manual usage:
 
-More information:
+```bash
+# Generate compilation database
+cmake -S . -B build -DCMAKE_EXPORT_COMPILE_COMMANDS=ON
 
-- clang-tidy docs: https://clang.llvm.org/extra/clang-tidy/
-- A conservative `.clang-tidy` configuration is included in the repository to reduce noise.
+# Run clang-tidy across C sources
+clang-tidy -p build $(find src -name '*.c')
+```
+
+A conservative `.clang-tidy` configuration is included in the repository. See [clang-tidy docs](https://clang.llvm.org/extra/clang-tidy/) for more information.
 
 ## Notes
 
-- The test setup fetches `cmocka` automatically if it's not available on the system (FetchContent pinned to cmocka 1.1.5). If you prefer using a system-installed cmocka, install it and rerun CMake.
-
-- If you want editor tooling (clangd, clang-tidy) to see compile flags, generate `compile_commands.json` by configuring CMake with `-DCMAKE_EXPORT_COMPILE_COMMANDS=ON`. The file will be created in the `build/` directory. See `TESTS.md` for a symlink example.
+- The test setup fetches `cmocka` automatically if not available on the system (FetchContent pinned to cmocka 1.1.5).
+- For editor tooling (clangd, clang-tidy), generate `compile_commands.json` with `-DCMAKE_EXPORT_COMPILE_COMMANDS=ON`.

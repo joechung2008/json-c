@@ -1,6 +1,7 @@
 # Build artifacts and output directories
 /build/
 /build-vs/
+/obj/
 /out/
 /dist/
 

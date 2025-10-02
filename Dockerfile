@@ -9,12 +9,10 @@ RUN apk add --no-cache \
         ca-certificates
 WORKDIR /app
 COPY . /app
-RUN bash bin/build.sh -t Debug
+RUN bash bin/build.sh
 
 # --- Runner stage ---
 FROM alpine:latest AS runner
 WORKDIR /app
-COPY --from=builder /app/build/json-cli /app/json-cli
-COPY --from=builder /app/build/libjson_c.so* /app/
-ENV LD_LIBRARY_PATH=/app
+COPY --from=builder /app/out/json-cli /app/json-cli
 ENTRYPOINT ["/app/json-cli"]
