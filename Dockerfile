@@ -9,7 +9,8 @@ RUN apk add --no-cache \
         ca-certificates
 WORKDIR /app
 COPY . /app
-RUN bash bin/build.sh
+RUN cmake -B build -DCMAKE_BUILD_TYPE=Release && \
+    cmake --build build
 
 # --- Runner stage ---
 FROM alpine:latest AS runner
