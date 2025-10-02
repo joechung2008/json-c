@@ -1,7 +1,6 @@
 # PowerShell build script for Windows
 param(
-    [string]$Configuration = 'Debug',
-    [switch]$BuildTests
+    [string]$Configuration = 'Debug'
 )
 
 $PSScriptRoot = Split-Path -Parent $MyInvocation.MyCommand.Definition
@@ -48,7 +47,6 @@ else {
 # causes warnings like "Ignoring extra path from command line: 'Debug'".
 # The configuration (Debug/Release) is selected at build time with --config.
 $cmakeArgs = @('-S', $RootDir, '-B', $BuildDir, '-G', $Generator, '-A', $Arch, '-DCMAKE_C_FLAGS="-W3"', '-Wno-dev')
-if ($BuildTests) { $cmakeArgs += '-DJSON_C_BUILD_TESTS=ON' }
 cmake @cmakeArgs
 cmake --build $BuildDir --config $Configuration --parallel
 Write-Host "Build complete. Artifacts in: $BuildDir"

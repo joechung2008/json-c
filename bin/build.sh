@@ -5,10 +5,6 @@ ROOT_DIR="$(cd "$(dirname "$0")/.." && pwd)"
 BUILD_DIR="$ROOT_DIR/build"
 mkdir -p "$BUILD_DIR"
 
-# Allow overriding whether to build tests via environment variable.
-# Default to ON for developer builds but allow CI or callers to set it to OFF.
-JSON_C_BUILD_TESTS=${JSON_C_BUILD_TESTS:-ON}
-
 # Determine build type: precedence order
 # 1) --type / -t argument
 # 2) first positional argument
@@ -80,8 +76,8 @@ case "${BUILD_TYPE,,}" in
 		;;
 esac
 
-echo "Configuring build (tests: $JSON_C_BUILD_TESTS, type: $BUILD_TYPE)"
-cmake -S "$ROOT_DIR" -B "$BUILD_DIR" -DCMAKE_BUILD_TYPE="$BUILD_TYPE" -DJSON_C_BUILD_TESTS=$JSON_C_BUILD_TESTS -DCMAKE_C_FLAGS="-Wall" -Wno-dev
+echo "Configuring build (type: $BUILD_TYPE)"
+cmake -S "$ROOT_DIR" -B "$BUILD_DIR" -DCMAKE_BUILD_TYPE="$BUILD_TYPE" -DCMAKE_C_FLAGS="-Wall" -Wno-dev
 cmake --build "$BUILD_DIR" --parallel
 
 echo "Build complete. Build artifacts are in: $BUILD_DIR"
