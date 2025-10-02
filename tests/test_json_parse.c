@@ -88,12 +88,16 @@ void test_parse_value_number_and_string(void **state);
 void test_print_array_token(void **state);
 void test_print_array_with_array_element(void **state);
 void test_print_array_with_object_element(void **state);
+void test_print_array_with_nested_nonempty_array(void **state);
+void test_print_array_with_nested_nonempty_object(void **state);
 void test_print_false_token(void **state);
 void test_print_null_token(void **state);
 void test_print_number_token(void **state);
 void test_print_object_token(void **state);
 void test_print_object_with_pair_array_value(void **state);
 void test_print_object_with_pair_object_value(void **state);
+void test_print_object_with_nested_nonempty_array(void **state);
+void test_print_object_with_nested_nonempty_object(void **state);
 void test_print_pair_token(void **state);
 void test_print_string_token(void **state);
 void test_print_true_token(void **state);
@@ -161,12 +165,16 @@ int main(void)
         cmocka_unit_test(test_print_array_token),
         cmocka_unit_test(test_print_array_with_array_element),
         cmocka_unit_test(test_print_array_with_object_element),
+        cmocka_unit_test(test_print_array_with_nested_nonempty_array),
+        cmocka_unit_test(test_print_array_with_nested_nonempty_object),
         cmocka_unit_test(test_print_false_token),
         cmocka_unit_test(test_print_null_token),
         cmocka_unit_test(test_print_number_token),
         cmocka_unit_test(test_print_object_token),
         cmocka_unit_test(test_print_object_with_pair_array_value),
         cmocka_unit_test(test_print_object_with_pair_object_value),
+        cmocka_unit_test(test_print_object_with_nested_nonempty_array),
+        cmocka_unit_test(test_print_object_with_nested_nonempty_object),
         cmocka_unit_test(test_print_pair_token),
         cmocka_unit_test(test_print_string_token),
         cmocka_unit_test(test_print_true_token),

@@ -43,3 +43,30 @@ void test_print_array_with_object_element(void **state)
     (void)n;
     token_free(t);
 }
+
+void test_print_array_with_nested_nonempty_array(void **state)
+{
+    (void)state;
+    Token *t = token_parse("[[\"item\"]]", false);
+    assert(t != NULL);
+    ArrayToken *tok = (ArrayToken *)t;
+    char        buf[2048];
+    int         n = print_array_token(tok, 0, buf, sizeof(buf), false);
+    assert(n > 0 && strstr(buf, "ArrayToken") != NULL && strstr(buf, "StringToken") != NULL);
+    (void)n;
+    token_free(t);
+}
+
+void test_print_array_with_nested_nonempty_object(void **state)
+{
+    (void)state;
+    Token *t = token_parse("[{\"key\":\"value\"}]", false);
+    assert(t != NULL);
+    ArrayToken *tok = (ArrayToken *)t;
+    char        buf[2048];
+    int         n = print_array_token(tok, 0, buf, sizeof(buf), false);
+    assert(n > 0 && strstr(buf, "ArrayToken") != NULL && strstr(buf, "ObjectToken") != NULL &&
+           strstr(buf, "PairToken") != NULL);
+    (void)n;
+    token_free(t);
+}

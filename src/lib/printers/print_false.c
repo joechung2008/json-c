@@ -7,7 +7,11 @@
 int print_false_token(const FalseToken *tok, int indent, char *out, size_t outsz, bool suppress_leading_indent)
 {
     if (suppress_leading_indent)
-        return json_snprintf(out, outsz, "FalseToken { skip: %d }\n", tok->skip);
+    {
+        return json_snprintf(out, outsz, "FalseToken { skip: %d }", tok->skip);
+    }
     else
-        return json_snprintf(out, outsz, "%*sFalseToken { skip: %d }\n", indent, "", tok->skip);
+    {
+        return json_snprintf(out, outsz, "%*sFalseToken { skip: %d }", indent, "", tok->skip);
+    }
 }

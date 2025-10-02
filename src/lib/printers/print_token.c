@@ -24,10 +24,15 @@ int print_token(const Token *token, int indent, char *out, size_t outsz, bool su
     if (!token)
     {
         if (suppress_leading_indent)
+        {
             return json_snprintf(out, outsz, "(null token)\n");
+        }
         else
+        {
             return json_snprintf(out, outsz, "%*s(null token)\n", indent, "");
+        }
     }
+
     int type = ((const int32_t *)token)[1]; // type is second int field
     switch (type)
     {
@@ -49,8 +54,12 @@ int print_token(const Token *token, int indent, char *out, size_t outsz, bool su
         return print_null_token((const NullToken *)token, indent, out, outsz, suppress_leading_indent);
     default:
         if (suppress_leading_indent)
+        {
             return json_snprintf(out, outsz, "(unknown token type)\n");
+        }
         else
+        {
             return json_snprintf(out, outsz, "%*s(unknown token type)\n", indent, "");
+        }
     }
 }
